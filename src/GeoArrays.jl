@@ -8,17 +8,21 @@ using StaticArrays
 const GFT = GeoFormatTypes
 
 include("geoarray.jl")
-include("geoutils.jl")
-include("utils.jl")
-include("io.jl")
-include("interpolate.jl")
-include("crs.jl")
-include("operations.jl")
-include("plot.jl")
 include("bbox.jl")
+include("affine.jl")
+
 include("centercoords.jl")
 include("coords.jl")
+include("crs.jl")
+
+include("utils.jl")
+include("interpolate.jl")
+include("operations.jl")
+include("plot.jl")
 include("resample.jl")
+
+include("IO/IO.jl")
+include("gdal/gdal.jl")
 
 export GeoArray
 

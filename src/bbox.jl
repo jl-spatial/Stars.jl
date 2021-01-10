@@ -1,10 +1,3 @@
-struct box
-    xmin::Float64
-    ymin::Float64
-    xmax::Float64
-    ymax::Float64
-end
-
 bbox(xmin, ymin, xmax, ymax) = box(xmin, ymin, xmax, ymax)
 bbox(;xmin, ymin, xmax, ymax) = box(xmin, ymin, xmax, ymax)
 
@@ -28,21 +21,12 @@ function bbox_nc(ncfile::String)
     bbox(lon, lat)    
 end
 
-
 function bbox_to_affine(size::Tuple{Integer, Integer}, bbox::box)
     AffineMap(
         SMatrix{2,2}((bbox.max_x - bbox.min_x) / size[1], 0, 0, -(bbox.max_y - bbox.min_y)/size[2]),
         SVector(bbox.min_x, bbox.max_y)
         )
 end
-
-function bbox_to_affine(size::Tuple{Integer, Integer}, bbox::box)
-    AffineMap(
-        SMatrix{2,2}((bbox.max_x - bbox.min_x) / size[1], 0, 0, -(bbox.max_y - bbox.min_y)/size[2]),
-        SVector(bbox.min_x, bbox.max_y)
-        )
-end
-
 
 """Set geotransform of `GeoArray` by specifying a bounding box.
 Note that this only can result in a non-rotated or skewed `GeoArray`."""

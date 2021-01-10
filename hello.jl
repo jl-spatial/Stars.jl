@@ -1,9 +1,9 @@
+using GeoArrays
 using BenchmarkTools
 # using GeoFormatTypes
 # using ArchGDAL
 # using CoordinateTransformations
 using StaticArrays
-using GeoArrays
 using Test
 using CoordinateTransformations
 # const GFT = GeoFormatTypes

@@ -1,8 +1,16 @@
+struct box
+    xmin::Float64
+    ymin::Float64
+    xmax::Float64
+    ymax::Float64
+end
+
 mutable struct GeoArray{T<:Union{Real, Union{Missing, Real}}} <: AbstractArray{T, 3}
     A::AbstractArray{T, 3}
     f::AffineMap
     crs::WellKnownText{GeoFormatTypes.CRS, <:String}
 end
+
 GeoArray(A::AbstractArray{T, 3} where T<:Union{Real, Union{Missing, Real}}) = GeoArray(A, geotransform_to_affine(SVector(0.,1.,0.,0.,0.,1.)), "")
 GeoArray(A::AbstractArray{T, 3} where T<:Union{Real, Union{Missing, Real}}, f::AffineMap) = GeoArray(A, f, GFT.WellKnownText(GFT.CRS(), ""))
 GeoArray(A::AbstractArray{T, 3} where T<:Union{Real, Union{Missing, Real}}, f::AffineMap, crs::String) = GeoArray(A, f, GFT.WellKnownText(GFT.CRS(), crs))
@@ -13,13 +21,12 @@ function GeoArray(A::AbstractArray{T, 3}, x::AbstractRange, y::AbstractRange, ar
     GeoArray(A, f, args...)
 end
 
-function GeoArray(A::AbstractArray{T}, bbox::box; proj = 4326) 
-    ga = GeoArray(arr)
+function GeoArray(A::AbstractArray{T}, bbox::box; proj = 4326) where T <: Real
+    ga = GeoArray(A)
     bbox!(ga, bbox) 
     if proj === nothing; epsg!(ga, proj); end
     ga
 end
-
 
 Base.size(ga::GeoArray) = size(ga.A)
 Base.IndexStyle(::Type{T}) where {T<:GeoArray} = IndexLinear()
