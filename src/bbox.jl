@@ -23,8 +23,8 @@ end
 
 function bbox_to_affine(size::Tuple{Integer, Integer}, bbox::box)
     AffineMap(
-        SMatrix{2,2}((bbox.max_x - bbox.min_x) / size[1], 0, 0, -(bbox.max_y - bbox.min_y)/size[2]),
-        SVector(bbox.min_x, bbox.max_y)
+        SMatrix{2,2}((bbox.xmax - bbox.xmin) / size[1], 0, 0, -(bbox.ymax - bbox.ymin)/size[2]),
+        SVector(bbox.xmin, bbox.ymax)
         )
 end
 
@@ -44,7 +44,7 @@ function bboxes(ga::GeoArray)
         v = c[i:i+1, j:j+1]
         minx, maxx = extrema(first.(v))::Tuple{Float64, Float64}
         miny, maxy = extrema(last.(v))::Tuple{Float64, Float64}
-        cellbounds[i, j] = (min_x=minx, max_x=maxx, min_y=miny, max_y=maxy)
+        cellbounds[i, j] = (minx=minx, maxx=maxx, miny=miny, maxy=maxy)
     end
     cellbounds
 end

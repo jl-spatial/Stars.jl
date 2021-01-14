@@ -14,19 +14,21 @@ end
 GeoArray(A::AbstractArray{T, 3} where T<:Union{Real, Union{Missing, Real}}) = GeoArray(A, geotransform_to_affine(SVector(0.,1.,0.,0.,0.,1.)), "")
 GeoArray(A::AbstractArray{T, 3} where T<:Union{Real, Union{Missing, Real}}, f::AffineMap) = GeoArray(A, f, GFT.WellKnownText(GFT.CRS(), ""))
 GeoArray(A::AbstractArray{T, 3} where T<:Union{Real, Union{Missing, Real}}, f::AffineMap, crs::String) = GeoArray(A, f, GFT.WellKnownText(GFT.CRS(), crs))
-GeoArray(A::AbstractArray{T, 2} where T<:Union{Real, Union{Missing, Real}}, args...) = GeoArray(reshape(A, size(A)..., 1), args...)
+
 function GeoArray(A::AbstractArray{T, 3}, x::AbstractRange, y::AbstractRange, args...) where T<:Union{Real, Union{Missing, Real}}
     size(A)[1:2] != (length(x), length(y)) && error("Size of `GeoArray` $(size(A)) does not match size of (x,y): $((length(x),length(y))). Note that this function takes *center coordinates*.")
     f = unitrange_to_affine(x, y)
     GeoArray(A, f, args...)
 end
 
-function GeoArray(A::AbstractArray{T}, bbox::box; proj = 4326) where T <: Real
+function GeoArray(A::AbstractArray{T, 3}, bbox::box; proj = 4326) where T <: Real
     ga = GeoArray(A)
     bbox!(ga, bbox) 
     if proj === nothing; epsg!(ga, proj); end
     ga
 end
+
+GeoArray(A::AbstractArray{T, 2} where T<:Union{Real, Union{Missing, Real}}, args...) = GeoArray(reshape(A, size(A)..., 1), args...)
 
 Base.size(ga::GeoArray) = size(ga.A)
 Base.IndexStyle(::Type{T}) where {T<:GeoArray} = IndexLinear()

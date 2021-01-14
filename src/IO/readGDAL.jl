@@ -11,3 +11,5 @@ function readGDAL(files::Array{String,1}, options)
     res = map(file -> readGDAL(file, options...), files)
     vcat(res...)
 end
+
+export readGDAL
