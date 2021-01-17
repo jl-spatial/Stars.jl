@@ -1,13 +1,14 @@
 ## fix for heatmap visualization
-function spatial_array(x::AbstractArray{T,2}) where { T <: Real}
+function spatial_array(x::AbstractArray{T,2}) where T <: Real
     flipud(transpose(x))
 end
 
-flipud(x::AbstractArray{T, 2}) = x[end:-1:1, :]
-flipud(x::AbstractArray{T, 3}) = x[end:-1:1, :, :]
+flipud(x::AbstractArray{T, 2}) where T <: Real = x[end:-1:1, :]
+flipud(x::AbstractArray{T, 3}) where T <: Real = x[end:-1:1, :, :]
 
-fliplr(x::AbstractArray{T, 2}) = x[:, end:-1:1]
-fliplr(x::AbstractArray{T, 3}) = x[:, end:-1:1, :]
+fliplr(x::AbstractArray{T, 2}) where T <: Real = x[:, end:-1:1]
+fliplr(x::AbstractArray{T, 3}) where T <: Real = x[:, end:-1:1, :]
+
 
 """Function to flip GeoArray upside down to adjust to GDAL ecosystem."""
 function flipud!(ga::GeoArray)
@@ -26,3 +27,5 @@ function flipud!(ga::GeoArray)
     ga.f = f
     ga
 end
+
+export fliplr, flipud, flipud!

@@ -19,3 +19,5 @@ function interpolate!(ga::GeoArray, solver::T, band=1, symbol=:z) where T <: Abs
     ga.A[:, :, band] .= reshape(solution[symbol][:mean], size(ga.A)[1:2])
     ga
 end
+
+export interpolate!

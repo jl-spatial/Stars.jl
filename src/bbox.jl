@@ -50,3 +50,5 @@ function bboxes(ga::GeoArray)
 end
 
 export box
+export bbox, bbox!
+export bboxes

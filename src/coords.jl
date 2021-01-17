@@ -52,8 +52,9 @@ function coords_xy(ga::GeoArray, mid::Vector{Int} = [1, 1])
     mid = [1, 1]
     delta = [cellsize_x, cellsize_y]/2 .* mid
     
-    x = range[1] + delta[1]:cellsize_x:range[3]
-    y = range[2] + delta[2]:cellsize_y:range[4]
+    rbbox = bbox(ga)
+    x = rbbox.xmin + delta[1]:cellsize_x:rbbox.xmax
+    y = rbbox.ymin + delta[2]:cellsize_y:rbbox.ymax
     if cellsize_y2 < 0; y = reverse(y); end
 
     x, y
@@ -72,6 +73,5 @@ function coords(ga::GeoArray, mid::Vector{Int} = [1, 1])
     x, y = coords_xy(ga, mid)
     meshgrid(x, y)
 end
-
 
 export meshgrid, coords, coords_xy, coords_x, coords_y

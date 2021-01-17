@@ -1,10 +1,11 @@
 module GeoArrays
 
-using GeoFormatTypes
 using GDAL
-using ArchGDAL
+using ArchGDAL; const AG = ArchGDAL
+
 using CoordinateTransformations
 using StaticArrays
+using GeoFormatTypes
 const GFT = GeoFormatTypes
 
 include("geoarray.jl")
@@ -15,14 +16,13 @@ include("centercoords.jl")
 include("coords.jl")
 include("crs.jl")
 
-include("utils.jl")
-include("interpolate.jl")
-include("operations.jl")
-include("plot.jl")
-include("resample.jl")
-
-include("IO/IO.jl")
+include("utils/utils.jl")
+include("raster/Raster.jl")
+include("shp/GeoDataFrames.jl")
 include("gdal/gdal.jl")
+
+include("plot.jl")
+include("tools_ratser.jl")
 
 export GeoArray
 
@@ -30,12 +30,7 @@ export coords
 export centercoords
 export indices
 
-export bbox, bbox!
-export bboxes
-
 export compose!
-
-export interpolate!
 
 export epsg!
 export crs!
