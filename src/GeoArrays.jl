@@ -16,13 +16,15 @@ include("centercoords.jl")
 include("coords.jl")
 include("crs.jl")
 
+include("tools_ratser.jl")
+include("tools_Ipaper.jl")
+
 include("utils/utils.jl")
 include("raster/Raster.jl")
 include("shp/GeoDataFrames.jl")
 include("gdal/gdal.jl")
 
 include("plot.jl")
-include("tools_ratser.jl")
 
 export GeoArray
 

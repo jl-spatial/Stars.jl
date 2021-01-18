@@ -1,22 +1,7 @@
-const drivers = AG.listdrivers()
-const drivermapping = Dict(
-    ".shp" => "ESRI Shapefile",
-    ".gpkg" => "GPKG",
-    ".geojson" => "GeoJSON",
-)
-const fieldmapping = Dict(v => k for (k, v) in AG._FIELDTYPE)
-
-
-function readORG(fn::AbstractString, layer::Union{Integer,AbstractString}=0)
-    ds = AG.read(fn)
-    layer = AG.getlayer(ds, layer)
-    table = AG.Table(layer)
-    df = DataFrame(table)
-    "" in names(df) && rename!(df, Dict(Symbol("") => :geom, ))  # needed for now
-    df
-end
-
-function writeORG(fn::AbstractString, table; layer_name::AbstractString="data", geom_column::Symbol=:geom, crs::GFT.GeoFormat=GFT.EPSG(4326), driver::Union{Nothing,AbstractString}=nothing)
+# ENV["SHAPE_ENCODING"] = "UTF-8"
+function writeORG(table, fn::AbstractString; layer_name::AbstractString="data", 
+    geom_column::Symbol=:geom, crs::GFT.GeoFormat=GFT.EPSG(4326), driver::Union{Nothing,AbstractString}=nothing)
+    
     rows = Tables.rows(table)
     sch = Tables.schema(rows)
 
@@ -41,14 +26,17 @@ function writeORG(fn::AbstractString, table; layer_name::AbstractString="data", 
         end
     end
 
+    options = ["ENCODING=UTF-8", "SHAPE_ENCODING=UTF-8"];
     AG.create(
         fn,
-        driver=driver
+        driver=driver,
+        options=options
     ) do ds
         AG.createlayer(
             name=layer_name,
             geom=geom_type,
-            spatialref=AG.importCRS(crs)
+            spatialref=AG.importCRS(crs), 
+            options=options
         ) do layer
             for (name, type) in fields
                 AG.addfielddefn!(layer, String(name), fieldmapping[type])
@@ -61,11 +49,10 @@ function writeORG(fn::AbstractString, table; layer_name::AbstractString="data", 
                     end
                 end
             end
-            AG.copy(layer, dataset=ds, name=layer_name)
+            AG.copy(layer, dataset=ds, name=layer_name, options=options)
         end
     end
     fn
 end
 
-
-export readORG, writeORG
+export writeORG

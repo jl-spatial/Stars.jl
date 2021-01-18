@@ -1,3 +1,12 @@
+"""
+Boundary box
+
+- bbox(xmin, ymin, xmax, ymax)
+- bbox(lon, lat)    
+- bbox(ga::GeoArray)    
+- bbox!(ga::GeoArray, bbox::box) : reset bbox
+- bbox_nc(ncfile::String)  
+"""
 bbox(xmin, ymin, xmax, ymax) = box(xmin, ymin, xmax, ymax)
 bbox(;xmin, ymin, xmax, ymax) = box(xmin, ymin, xmax, ymax)
 

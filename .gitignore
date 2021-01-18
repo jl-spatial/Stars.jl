@@ -4,4 +4,8 @@
 docs/build
 
 test/*
-!test/*.jl
+# test/*.jl
+
+Figures/
+*.tif
+*.pdf
