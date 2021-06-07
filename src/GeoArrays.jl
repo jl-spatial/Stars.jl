@@ -26,6 +26,9 @@ include("gdal/gdal.jl")
 
 include("plot.jl")
 
+include("hydro/hydro.jl")
+include("hydro/snap_pour_points.jl")
+
 export GeoArray
 
 export coords

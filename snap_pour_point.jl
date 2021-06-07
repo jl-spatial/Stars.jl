@@ -7,13 +7,11 @@ using DataFrames
 using RCall
 
 
-
 begin 
     # file = "f:/SciData/ET_products/PMLV2_v016/PMLV2_yearly_G010_v016_2001-01-01.tif"
     # file = "/mnt/i/ChinaBasins/china90_merit/merit90_china_flowaccu.tif"
     file = "i:/ChinaBasins/china90_merit/merit90_china_flowaccu.tif"
     @time flowaccu = GeoArrays.read(file)
-
     shp = readORG("I:/ChinaBasins/shp/chinaRunoff_stationInfo_Yangtze_sp87.shp")
 end
 

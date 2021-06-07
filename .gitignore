@@ -9,3 +9,6 @@ test/*
 Figures/
 *.tif
 *.pdf
+
+# data
+*.rda
