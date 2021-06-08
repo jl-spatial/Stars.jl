@@ -11,7 +11,6 @@ mutable struct GeoArray{T<:Union{Real, Union{Missing, Real}}} <: AbstractArray{T
     crs::WellKnownText{GeoFormatTypes.CRS, <:String}
 end
 
-
 wgs84_wkt = "GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AXIS[\"Latitude\",NORTH],AXIS[\"Longitude\",EAST],AUTHORITY[\"EPSG\",\"4326\"]]"
 
 GeoArray(A::AbstractArray{T, 3} where T<:Union{Real, Union{Missing, Real}}) = GeoArray(A, geotransform_to_affine(SVector(0.,1.,0.,0.,0.,1.)), "")
@@ -27,7 +26,7 @@ function GeoArray(A::AbstractArray{T, 3}, x::AbstractRange, y::AbstractRange, ar
     GeoArray(A, f, args...)
 end
 
-function GeoArray(A::AbstractArray{T, 3}, bbox::box; proj = 4326) where T <: Real
+function GeoArray(A::AbstractArray{T, 3}, bbox::box; proj = 4326) where T<:Union{Real, Union{Missing, Real}}
     ga = GeoArray(A)
     bbox!(ga, bbox)
     epsg!(ga, proj)
@@ -35,6 +34,9 @@ function GeoArray(A::AbstractArray{T, 3}, bbox::box; proj = 4326) where T <: Rea
 end
 
 GeoArray(A::AbstractArray{T, 2} where T<:Union{Real, Union{Missing, Real}}, args...) = GeoArray(reshape(A, size(A)..., 1), args...)
+
+
+
 
 Base.size(ga::GeoArray) = size(ga.A)
 Base.IndexStyle(::Type{T}) where {T<:GeoArray} = IndexLinear()

@@ -6,7 +6,26 @@ const drivermapping = Dict(
     ".gpkg" => "GPKG",
     ".geojson" => "GeoJSON",
 )
-const fieldmapping = Dict(v => k for (k, v) in AG._FIELDTYPE)
+# const fieldmapping = Dict(v => k for (k, v) in _FIELDTYPE)
+
+# "return the corresponding `DataType` in julia"
+# const _FIELDTYPE = Dict{AG.OGRFieldType, DataType}(
+#     GDAL.OFTInteger         => Int32,
+#     GDAL.OFTIntegerList     => Nothing,
+#     GDAL.OFTReal            => Float64,
+#     GDAL.OFTRealList        => Nothing,
+#     GDAL.OFTString          => String,
+#     GDAL.OFTStringList      => Nothing,
+#     GDAL.OFTWideString      => Nothing, # deprecated
+#     GDAL.OFTWideStringList  => Nothing, # deprecated
+#     GDAL.OFTBinary          => Nothing,
+#     GDAL.OFTDate            => Date,
+#     GDAL.OFTTime            => Nothing,
+#     GDAL.OFTDateTime        => DateTime,
+#     GDAL.OFTInteger64       => Int64,
+#     GDAL.OFTInteger64List   => Nothing)
+# geomtypes = (IGeometry{ArchGDAL.gettype(ArchGDAL.getgeomdefn(featuredefn, i))} for i in 0:ngeom-1)
+# field_types = (_FIELDTYPE[gettype(fielddefn)] for fielddefn in fielddefns)
 
 # AG.createpoint(1.0, 2.0)
 function get_coords(geom::ArchGDAL.IGeometry)
