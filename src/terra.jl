@@ -1,4 +1,4 @@
-module GeoArrays
+module terra
 
 using GDAL
 using ArchGDAL; const AG = ArchGDAL

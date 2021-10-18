@@ -1,10 +1,23 @@
-using GeoArrays
+using terra
+
+
+
+file = "k:/Researches/Phenology/MOD13A2_NorthChina_2016_2020_EVI.tif"
+@time flowaccu = terra.read(file)
+
+
+
+
+
+
 using Printf
 using Plots
 using ArchGDAL
 const AG = ArchGDAL
 using DataFrames
 using RCall
+
+
 
 
 begin 
@@ -21,7 +34,6 @@ begin
     snap_pour_point(flowaccu, shp, "chinaRunoff_stationInfo_Yangtze_sp87_snaped.shp"; ngrid = 15)
 end
 @time ps = plot_rs(res["raster"], shp)
-
 # plot(ps[1:6]..., layout = (2, 3))
 # # writeRaster(r2, "01.tif")
 # # using Plots
