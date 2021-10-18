@@ -10,24 +10,24 @@ Boundary box
 bbox(xmin, ymin, xmax, ymax) = box(xmin, ymin, xmax, ymax)
 bbox(;xmin, ymin, xmax, ymax) = box(xmin, ymin, xmax, ymax)
 
-function bbox(lon, lat)
+function st_bbox(lon, lat)
     cellsize_x = abs(lon[2] - lon[1])
     cellsize_y = abs(lat[2] - lat[1])
     box(minimum(lon) - cellsize_x/2, minimum(lat) - cellsize_y/2, 
         maximum(lon) + cellsize_x/2, maximum(lat) + cellsize_y/2)
 end
 
-function bbox(ga::GeoArray)
+function st_bbox(ga::GeoArray)
     ax, ay = ga.f(SVector(0,0))
     bx, by = ga.f(SVector(size(ga)[1:2]))
     # (min_x=min(ax, bx), min_y=min(ay, by), max_x=max(ax, bx), max_y=max(ay, by))
     box(min(ax, bx), min(ay, by), max(ax, bx), max(ay, by))
 end
 
-function bbox_nc(ncfile::String)
+function st_bbox(ncfile::String)
     lat = NetCDF.ncread(ncfile, "lat")
     lon = NetCDF.ncread(ncfile, "lon")
-    bbox(lon, lat)    
+    st_bbox(lon, lat)    
 end
 
 function bbox_to_affine(size::Tuple{Integer, Integer}, bbox::box)
@@ -39,7 +39,7 @@ end
 
 """Set geotransform of `GeoArray` by specifying a bounding box.
 Note that this only can result in a non-rotated or skewed `GeoArray`."""
-function bbox!(ga::GeoArray, bbox::box)
+function st_bbox!(ga::GeoArray, bbox::box)
     ga.f = bbox_to_affine(size(ga)[1:2], bbox)
     ga
 end
@@ -59,5 +59,5 @@ function bboxes(ga::GeoArray)
 end
 
 export box
-export bbox, bbox!
+export bbox, st_bbox, st_bbox!
 export bboxes

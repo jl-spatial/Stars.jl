@@ -1,4 +1,4 @@
-using DataFrames
+import DataFrames: DataFrame
 using Tables
 
 include("exports.jl")

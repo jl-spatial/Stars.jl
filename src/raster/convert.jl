@@ -1,4 +1,5 @@
-using DataFrames
+import DataFrames: DataFrame
+
 
 function raster2df(r::GeoArray)
     LON, LAT = GeoArrays.coords(r)    

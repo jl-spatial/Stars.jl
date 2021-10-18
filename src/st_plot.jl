@@ -7,7 +7,7 @@ using RecipesBase
     seriestype := :heatmap
     color := :viridis
 
-    coords = centercoords(ga)
+    coords = st_coordinates(ga)
     x = map(x->x[1], coords[:, 1])
     y = map(x->x[2], coords[end, :])
     z = ga.A[:,:,band]'

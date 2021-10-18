@@ -6,7 +6,9 @@ docs/build
 test/*
 # test/*.jl
 
+temp/
 Figures/
+
 *.tif
 *.pdf
 

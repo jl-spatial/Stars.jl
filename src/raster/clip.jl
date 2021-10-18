@@ -22,7 +22,7 @@ function clip_bbox(x::GeoArray, bbox::box)
 end
 
 function clip_bbox(x::GeoArray, y::GeoArray)
-    clip_bbox(x, bbox(y))
+    clip_bbox(x, st_bbox(y))
 end
 
 """
@@ -53,7 +53,7 @@ function clip_point(r::GeoArray, shp; ngrid = 10)
         ind_y = I_lat-ngrid:I_lat+ngrid
         arr = @view(r.A[ind_x, ind_y])
 
-        r2 = GeoArray(arr, bbox(LON[ind_x], LAT[ind_y]))
+        r2 = GeoArray(arr, st_bbox(LON[ind_x], LAT[ind_y]))
         d = raster2df(r2)
         d = cbind(d, loc)
 

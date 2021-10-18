@@ -42,17 +42,16 @@ function meshgrid(x::AbstractArray{T,1}, y::AbstractArray{T,1}) where T <: Real
     X, Y
 end
 
-function coords_xy(ga::GeoArray, mid::Vector{Int} = [1, 1])
+function st_dim(ga::GeoArray; mid::Vector{Int} = [1, 1])
     if length(mid) == 1; mid = [mid, mid]; end
     
     cellsize_x = ga.f.linear[1]
     cellsize_y = abs(ga.f.linear[4])
     cellsize_y2 = ga.f.linear[4]
     
-    mid = [1, 1]
     delta = [cellsize_x, cellsize_y]/2 .* mid
     
-    rbbox = bbox(ga)
+    rbbox = st_bbox(ga)
     x = rbbox.xmin + delta[1]:cellsize_x:rbbox.xmax
     y = rbbox.ymin + delta[2]:cellsize_y:rbbox.ymax
     if cellsize_y2 < 0; y = reverse(y); end
@@ -60,18 +59,25 @@ function coords_xy(ga::GeoArray, mid::Vector{Int} = [1, 1])
     x, y
 end
 
-function coords_xy(bbox::box, cellsize::T) where {T <: Real}
+function st_dim(bbox::box, cellsize::T) where {T <: Real}
     lon = bbox.xmin + cellsize/2 : cellsize : bbox.xmax
     lat = reverse(bbox.ymin + cellsize/2 : cellsize : bbox.ymax)
     lon, lat # return
 end
 
-coords_x(ga::GeoArray, mid::Int = 1) = coords_xy(ga, mid)[1]
-coords_y(ga::GeoArray, mid::Int = 1) = coords_xy(ga, mid)[2]
+st_dim_x(ga::GeoArray; mid::Vector{Int} = [1, 1]) = st_dim(ga; mid)[1]
+st_dim_y(ga::GeoArray; mid::Vector{Int} = [1, 1]) = st_dim(ga; mid)[2]
 
-function coords(ga::GeoArray, mid::Vector{Int} = [1, 1])
-    x, y = coords_xy(ga, mid)
-    meshgrid(x, y)
+function st_dim(ga::GeoArray, dim::Symbol; mid::Vector{Int} = [1, 1])
+    if dim==:x
+        ci = st_dim_x(ga; mid = mid)
+    elseif dim==:y
+        ci = st_dim_y(ga; mid = mid)
+    else
+        error("Use :x or :y as second argument")
+    end
+    return ci
 end
 
-export meshgrid, coords, coords_xy, coords_x, coords_y
+
+export meshgrid, st_dim

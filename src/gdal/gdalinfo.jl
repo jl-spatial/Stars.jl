@@ -44,7 +44,7 @@ function gdalinfo(ga::GeoArray)
     mid = [1, 1]
     delta = [dx, dy]/2 .* mid
     
-    rbbox = bbox(ga)
+    rbbox = st_bbox(ga)
     lon = rbbox.xmin + delta[1]:dx:rbbox.xmax
     lat = rbbox.ymin + delta[2]:dy:rbbox.ymax
     if dy2 < 0; lat = reverse(lat); end

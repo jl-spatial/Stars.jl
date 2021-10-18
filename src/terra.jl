@@ -8,13 +8,17 @@ using StaticArrays
 using GeoFormatTypes
 const GFT = GeoFormatTypes
 
-include("geoarray.jl")
-include("bbox.jl")
-include("affine.jl")
+import Statistics
+import Statistics: mean
 
-include("centercoords.jl")
-include("coords.jl")
-include("crs.jl")
+
+include("geoarray.jl")
+include("st_bbox.jl")
+include("st_affine.jl")
+include("st_crs.jl")
+
+include("st_dim.jl")
+include("st_coordinates.jl")
 
 include("tools_ratser.jl")
 include("tools_Ipaper.jl")
@@ -24,7 +28,7 @@ include("raster/Raster.jl")
 include("shp/GeoDataFrames.jl")
 include("gdal/gdal.jl")
 
-include("plot.jl")
+include("st_plot.jl")
 
 include("hydro/hydro.jl")
 include("hydro/snap_pour_points.jl")
