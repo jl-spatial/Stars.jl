@@ -5,11 +5,14 @@ using RecipesBase
     yflip --> false
     aspect_ratio --> 1
     seriestype := :heatmap
-    color := :viridis
+    seriescolor := :viridis
 
-    coords = st_coordinates(ga)
-    x = map(x->x[1], coords[:, 1])
-    y = map(x->x[2], coords[end, :])
+    # coords = st_coordinates(ga)
+    # @show coords
+    x = st_coordinates(ga, :x)
+    y = st_coordinates(ga, :y)
+    # x = map(x->x[1], coords[:, 1])
+    # y = map(x->x[2], coords[end, :])
     z = ga.A[:,:,band]'
 
     # Can't use x/yflip as x/y coords

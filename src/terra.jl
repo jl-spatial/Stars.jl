@@ -29,6 +29,7 @@ include("shp/GeoDataFrames.jl")
 include("gdal/gdal.jl")
 
 include("st_plot.jl")
+include("st_subset.jl")
 
 include("hydro/hydro.jl")
 include("hydro/snap_pour_points.jl")

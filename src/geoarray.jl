@@ -14,9 +14,13 @@ julia> GeoArray(rand(10,10,1))
 10x10x1 Array{Float64, 3} with AffineMap([1.0 0.0; 0.0 1.0], [0.0, 0.0]) and undefined CRS
 ```
 """
-GeoArray(A::AbstractArray{T, 3} where T<:Union{Real, Union{Missing, Real}}) = GeoArray(A, geotransform_to_affine(SVector(0.,1.,0.,0.,0.,1.)), "")
-GeoArray(A::AbstractArray{T, 3} where T<:Union{Real, Union{Missing, Real}}, f::AffineMap) = GeoArray(A, f, GFT.WellKnownText(GFT.CRS(), ""))
-GeoArray(A::AbstractArray{T, 3} where T<:Union{Real, Union{Missing, Real}}, f::AffineMap, crs::String) = begin
+GeoArray(A::AbstractArray{T, 3}) where T<:Union{Real, Union{Missing, Real}} = 
+    GeoArray(A, geotransform_to_affine(SVector(0.,1.,0.,0.,0.,1.)), "")
+
+GeoArray(A::AbstractArray{T, 3}, f::AffineMap) where T<:Union{Real, Union{Missing, Real}} = 
+    GeoArray(A, f, GFT.WellKnownText(GFT.CRS(), ""))
+
+GeoArray(A::AbstractArray{T, 3}, f::AffineMap, crs::String) where T<:Union{Real, Union{Missing, Real}} = begin
     if crs == ""; crs = wgs84_wkt; end
     GeoArray(A, f, GFT.WellKnownText(GFT.CRS(), crs))
 end
@@ -34,7 +38,8 @@ function GeoArray(A::AbstractArray{T, 3}, bbox::box; proj = 4326) where T<:Union
     ga
 end
 
-GeoArray(A::AbstractArray{T, 2} where T<:Union{Real, Union{Missing, Real}}, args...) = GeoArray(reshape(A, size(A)..., 1), args...)
+GeoArray(A::AbstractArray{T, 2} where T<:Union{Real, Union{Missing, Real}}, args...) = 
+    GeoArray(reshape(A, size(A)..., 1), args...)
 
 
 Base.size(ga::GeoArray) = size(ga.A)

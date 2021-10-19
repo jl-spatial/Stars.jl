@@ -1,4 +1,4 @@
-using GeoArrays
+using terra
 using Test
 
 @testset "GeoArrays" begin
