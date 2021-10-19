@@ -6,26 +6,6 @@ rbind  = vcat
 export cbind, rbind, cbind!, rbind!
 
 """
-clip_bbox(x::GeoArray, bbox::box)
-clip_bbox(x::GeoArray, y::GeoArray)
-"""
-function clip_bbox(x::GeoArray, bbox::box)
-    # info = gdalinfo(file)
-    info = gdalinfo(x)
-    X, Y = info["coords"]
-    I_x = findall((X .<= bbox.xmax) .& (X .>= bbox.xmin))
-    I_y = findall((Y .<= bbox.ymax) .& (Y .>= bbox.ymin))
-
-    A = @view(x.A[I_x, I_y, :]);
-    ga = GeoArray(A, bbox);
-    ga
-end
-
-function clip_bbox(x::GeoArray, y::GeoArray)
-    clip_bbox(x, st_bbox(y))
-end
-
-"""
 clip_point(r, shp; ngrid = 10)
 ===
 - shp: DataFrame with the column of `geom`
@@ -84,4 +64,4 @@ function cellIJ(r::GeoArray, point::Tuple)
 end
 
 export cellIJ
-export clip_bbox, clip_point
+export clip_point

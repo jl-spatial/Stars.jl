@@ -30,8 +30,7 @@ function gdal_polygonize(raster_file, band = 1, out_file = "out.shp";
     GDAL.gdalclose(ds_raster)
 end
 
-function gdalsetrasternodatavalue()
-end
-
+# function gdalsetrasternodatavalue()
+# end
 
 export gdal_polygonize

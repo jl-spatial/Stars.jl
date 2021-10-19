@@ -59,9 +59,9 @@ function st_dim(ga::GeoArray; mid::Vector{Int} = [1, 1])
     x, y
 end
 
-function st_dim(bbox::box, cellsize::T) where {T <: Real}
-    lon = bbox.xmin + cellsize/2 : cellsize : bbox.xmax
-    lat = reverse(bbox.ymin + cellsize/2 : cellsize : bbox.ymax)
+function st_dim(b::bbox, cellsize::T) where {T <: Real}
+    lon = b.xmin + cellsize/2 : cellsize : b.xmax
+    lat = reverse(b.ymin + cellsize/2 : cellsize : b.ymax)
     lon, lat # return
 end
 

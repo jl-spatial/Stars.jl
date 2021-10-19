@@ -1,9 +1,12 @@
-struct box
+struct bbox
     xmin::Float64
     ymin::Float64
     xmax::Float64
     ymax::Float64
 end
+
+bbox(;xmin, ymin, xmax, ymax) = bbox(xmin, ymin, xmax, ymax)
+
 
 """
     GeoArray{T <: Union{Real,Union{Missing,Real}}} <: AbstractArray{T,3}

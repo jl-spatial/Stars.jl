@@ -12,7 +12,7 @@ import Statistics
 import Statistics: mean
 
 
-include("geoarray.jl")
+include("GeoArray.jl")
 include("st_bbox.jl")
 include("st_affine.jl")
 include("st_crs.jl")
@@ -26,7 +26,9 @@ include("tools_Ipaper.jl")
 include("utils/utils.jl")
 include("raster/Raster.jl")
 include("shp/GeoDataFrames.jl")
-include("gdal/gdal.jl")
+
+include("gdal_info.jl")
+include("gdal_polygonize.jl")
 
 include("st_plot.jl")
 include("st_subset.jl")
