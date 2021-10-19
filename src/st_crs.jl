@@ -38,11 +38,32 @@ function str2wkt(crs_string::AbstractString)
     end
 end
 
-"Set CRS on GeoArray by epsgcode"
-epsg!(ga::GeoArray, epsgcode::Int) = crs!(ga, EPSG(epsgcode))
-epsg!(ga::GeoArray, epsgstring::AbstractString) = crs!(ga, EPSG(epsgstring))
+"""
+    st_crs!(ga::GeoArray, crs::WellKnownText{GeoFormatTypes.CRS, <:String})
+    st_crs!(ga::GeoArray, crs::GFT.CoordinateReferenceSystemFormat)
+    st_crs!(ga::GeoArray, epsgcode::Int)    
 
-function crs!(ga::GeoArray, crs::GFT.CoordinateReferenceSystemFormat)
+Set CRS on GeoArray by epsgcode or string
+"""
+function st_crs!(ga::GeoArray, crs::WellKnownText{GeoFormatTypes.CRS, <:String})
+    ga.crs = crs
+    ga
+end
+
+function st_crs!(ga::GeoArray, crs::GFT.CoordinateReferenceSystemFormat)
     ga.crs = convert(GFT.WellKnownText, GFT.CRS(), crs)
     ga
 end
+
+st_crs!(ga::GeoArray, epsgcode::Int) = st_crs!(ga, EPSG(epsgcode))
+
+st_crs(ga::GeoArray) = ga.crs
+
+epsg!(ga::GeoArray, epsgcode::Int) = st_crs!(ga, EPSG(epsgcode))
+epsg!(ga::GeoArray, epsgstring::AbstractString) = st_crs!(ga, EPSG(epsgstring))
+
+
+crs! = st_crs!
+
+
+export st_crs, st_crs!

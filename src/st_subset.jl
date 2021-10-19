@@ -10,10 +10,12 @@ clip_bbox(x::GeoArray, y::GeoArray)
 function st_clip(x::GeoArray, b::bbox)
     # info = gdalinfo(file)
     info = gdalinfo(x)
-    X, Y = info["coords"]
+    x, y = info["coords"]
+    
     I_x = findall((X .<= b.xmax) .& (X .>= b.xmin))
     I_y = findall((Y .<= b.ymax) .& (Y .>= b.ymin))
-    
+
+    b = st_bbox(x, y)
     A = @view(x.A[I_x, I_y, :]);
     ga = GeoArray(A, b);
     ga
