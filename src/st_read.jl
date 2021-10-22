@@ -46,10 +46,41 @@ function read(fn::AbstractString, bands = nothing)
         A[mask] .= missing
     end
 
-    # crs
     wkt = ArchGDAL.getproj(dataset)
-
     ArchGDAL.destroy(dataset)
     GeoArray(A, am, wkt)
 end
 
+"""
+- rast(fn::AbstractString, bands = nothing): construct `GeoArray` object from file
+- rast(ga::GeoArray; vals::AbstractArray{T}): Reconstruct `GeoArray` object
+"""
+rast(fn::AbstractString, bands = nothing) = read(fn, bands)
+function rast(ga::GeoArray; vals::AbstractArray{T}) where T<: Real
+    GeoArray(vals, ga.f, ga.crs)
+end
+
+
+"""
+    st_read(file::String, options...)
+    st_read(files::Array{String,1}, options)
+
+# Arguments:
+- `options`: other parameters to `ArchGDAL.read(dataset, options...)`.
+"""
+function st_read(file::String, options...)
+    ArchGDAL.read(file) do dataset
+        ArchGDAL.read(dataset, options...)
+    end
+end
+
+# read multiple tiff files and cbind
+function st_read(files::Array{String,1}, options)
+    # bands = collect(bands)
+    # bands = collect(Int32, bands)
+    res = map(file -> st_read(file, options...), files)
+    vcat(res...)
+end
+
+
+export st_read, rast

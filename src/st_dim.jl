@@ -42,6 +42,13 @@ function meshgrid(x::AbstractArray{T,1}, y::AbstractArray{T,1}) where T <: Real
     X, Y
 end
 
+"""
+    st_dim(ga::GeoArray; mid::Vector{Int} = [1, 1])
+    st_dim(b::bbox, cellsize::T) where {T <: Real}
+    st_dim(ga::GeoArray, dim::Symbol; mid::Vector{Int} = [1, 1])
+    
+Get dimensions of x and y
+"""
 function st_dim(ga::GeoArray; mid::Vector{Int} = [1, 1])
     if length(mid) == 1; mid = [mid, mid]; end
     

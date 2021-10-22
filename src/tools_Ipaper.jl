@@ -6,6 +6,10 @@ function seq(from, to, by = 1)
     from:by:to
 end
 
+function Range(x::AbstractArray{<:Real}) 
+    minimum(x), maximum(x)
+end
+
 function aggregate(x::AbstractArray{T, 1}, by::AbstractArray{T2, 1}, FUN::Function = mean) where {
     T<:Real, T2<:Real }
     
@@ -19,4 +23,13 @@ function aggregate(x::AbstractArray{T, 1}, by::AbstractArray{T2, 1}, FUN::Functi
     Dict(grps .=> vals)
 end
 
-export seq_along, seq, aggregate
+
+cbind  = hcat
+rbind  = vcat
+# cbind! = hcat!
+# rbind! = vcat!
+# hcat! not defined
+
+
+export cbind, rbind, 
+    seq_along, seq, Range, aggregate

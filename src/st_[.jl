@@ -46,13 +46,14 @@ julia> ga[2:3,2:3,1]
 ```
 """
 function Base.getindex(ga::GeoArray, i::AbstractRange, j::AbstractRange, k::Union{Colon,AbstractRange,Integer})
-    A = getindex(ga.A, i, j, k)
+    A = @view ga.A[i, j, k]
     x, y = first(i) - 1, first(j) - 1
     t = ga.f(SVector(x, y))
     GeoArray(A, AffineMap(ga.f.linear, t), ga.crs)
 end
+
 function Base.getindex(ga::GeoArray, i::AbstractRange, j::AbstractRange)
-    A = getindex(ga.A, i, j, :)
+    A = @view ga.A[i, j, :]
     x, y = first(i) - 1, first(j) - 1
     t = ga.f(SVector(x, y))
     GeoArray(A, AffineMap(ga.f.linear, t), ga.crs)

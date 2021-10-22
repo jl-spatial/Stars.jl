@@ -32,6 +32,10 @@ include("gdal_polygonize.jl")
 
 include("st_plot.jl")
 include("st_subset.jl")
+include("st_read.jl")
+include("st_write.jl")
+include("st_convert.jl")
+
 
 include("hydro/hydro.jl")
 include("hydro/snap_pour_points.jl")

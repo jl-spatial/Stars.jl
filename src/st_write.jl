@@ -41,3 +41,23 @@ function write!(fn::AbstractString, ga::GeoArray, nodata = nothing, shortname = 
     end
     fn
 end
+
+"""
+    st_write(ga::GeoArray, fn::AbstractString; nodata = nothing)
+    st_write(A::AbstractArray{T}, b::bbox, fn::AbstractString;nodata = nothing)
+
+
+# Arguments
+- `A`: 2d or 3d array
+- `fn`: outfile path
+- `nodata`: should be in the same data type as ga.A (or A)
+"""
+st_write(ga::GeoArray, fn::AbstractString; nodata = nothing) = write!(fn, ga, nodata)
+
+function st_write(A::AbstractArray{T}, b::bbox, fn::AbstractString; nodata = nothing) where T <: Real
+    ga = GeoArray(A, b)
+    st_write(ga, fn; nodata = nodata)
+end
+
+
+export st_write

@@ -1,3 +1,5 @@
+st_affine(ga::GeoArray) = ga.f
+
 function get_affine_map(ds::ArchGDAL.Dataset)
     # ArchGDAL fails hard on datasets without
     # an affinemap. GDAL documents that on fail
@@ -60,3 +62,6 @@ end
 function compose!(ga::GeoArray, t2::Translation)
     ga.f = compose(ga, t2)
 end
+
+
+export st_affine

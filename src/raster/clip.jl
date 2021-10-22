@@ -1,9 +1,3 @@
-cbind  = hcat
-rbind  = vcat
-# cbind! = hcat!
-# rbind! = vcat!
-# hcat! not defined
-export cbind, rbind, cbind!, rbind!
 
 """
 clip_point(r, shp; ngrid = 10)
