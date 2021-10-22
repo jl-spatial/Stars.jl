@@ -7,6 +7,7 @@ using CoordinateTransformations
 using StaticArrays
 using GeoFormatTypes
 const GFT = GeoFormatTypes
+# include("shp/GeoDataFrames.jl")
 
 import Statistics
 import Statistics: mean
@@ -25,7 +26,6 @@ include("tools_Ipaper.jl")
 
 include("utils/utils.jl")
 include("raster/Raster.jl")
-include("shp/GeoDataFrames.jl")
 
 include("gdal_info.jl")
 include("gdal_polygonize.jl")
@@ -37,8 +37,8 @@ include("st_write.jl")
 include("st_convert.jl")
 
 
-include("hydro/hydro.jl")
-include("hydro/snap_pour_points.jl")
+# include("hydro/hydro.jl")
+# include("hydro/snap_pour_points.jl")
 
 export GeoArray
 

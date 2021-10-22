@@ -11,7 +11,9 @@ function write!(fn::AbstractString, ga::GeoArray, nodata = nothing, shortname = 
     # Slice data and replace missing by nodata
     if isa(dtype, Union) && dtype.a == Missing
         dtype = dtype.b
-        if dtype ∉ keys(ArchGDAL._GDALTYPE)
+        try convert(ArchGDAL.GDALDataType, dtype)
+            nothing
+        catch
             dtype, data = cast_to_gdal(data)
         end
         nodata === nothing && (nodata = typemax(dtype))
@@ -21,16 +23,17 @@ function write!(fn::AbstractString, ga::GeoArray, nodata = nothing, shortname = 
         use_nodata = true
     end
 
-    if dtype ∉ keys(ArchGDAL._GDALTYPE)
+    try convert(ArchGDAL.GDALDataType, dtype)
+        nothing
+    catch
         dtype, data = cast_to_gdal(data)
     end
 
-    ArchGDAL.create(fn, driver = ArchGDAL.getdriver(shortname), width = w, height = h, nbands = b, dtype = dtype, options = options) do dataset
+    ArchGDAL.create(fn, driver=ArchGDAL.getdriver(shortname), width=w, height=h, nbands=b, dtype=dtype, options=options) do dataset
         for i = 1:b
             band = ArchGDAL.getband(dataset, i)
             ArchGDAL.write!(band, data[:,:,i])
-            # use_nodata && 
-            nodata !== nothing && ArchGDAL.GDAL.gdalsetrasternodatavalue(band.ptr, nodata)
+            use_nodata && ArchGDAL.GDAL.gdalsetrasternodatavalue(band.ptr, nodata)
         end
 
         # Set geotransform and crs

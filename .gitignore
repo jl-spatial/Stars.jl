@@ -1,16 +1,20 @@
+## Julia Files
 *.jl.cov
 *.jl.*.cov
 *.jl.mem
 docs/build
+Manifest.toml
 
+## Directory
 test/*
 # test/*.jl
-
 temp/
 Figures/
 
 *.tif
 *.pdf
 
-# data
+## data
 *.rda
+*.nc
+*.jld2

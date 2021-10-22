@@ -3,7 +3,7 @@ import DataFrames: DataFrame
 
 function rast2df(r::GeoArray)
     LON, LAT = st_coords(r)    
-    df = DataFrame(id = seq_along(LON), value = r.A[:], lon = LON[:], lat = LAT[:])
+    DataFrame(id = seq_along(LON), value = r.A[:], lon = LON[:], lat = LAT[:])
 end
 
 function rast2df(r::Array{GeoArray})
@@ -15,7 +15,32 @@ function rast2df(r::Array{GeoArray})
     df
 end
 
-function rast2mat(ga::GeoArray, mask::Union{Nothing, AbstractArray{Bool, 2}} = nothing)
+
+"""
+    shrink_bbox(ga, mask::AbstractArray{Bool, 2} = nothing)
+    
+only true values in `mask` will be kept.
+"""
+function shrink_bbox(ga::GeoArray, mask::Union{Nothing, AbstractArray{Bool, 2}} = nothing)
+    if mask === nothing; mask = ga.A[:, :, 1] .!= 0; end
+    ind = findall(mask)
+    # ind_vec = LinearIndices(mat)[ind]
+    rows = map(x -> x[1], ind) # x, long
+    cols = map(x -> x[2], ind) # y, lat
+
+    I_x = seq(Range(rows)...)
+    I_y = seq(Range(cols)...)
+    ga[I_x, I_y]
+end
+
+
+"""
+    rast_3dTo2d(ga::GeoArray, mask::Union{Nothing, AbstractArray{Bool, 2}} = nothing)
+    rast_3dTo2d(file::AbstractString, mask = nothing)
+
+If the input is a file path, `shrink_bbox` will be applied.
+"""
+function rast_3dTo2d(ga::GeoArray, mask::Union{Nothing, AbstractArray{Bool, 2}} = nothing)
     if mask === nothing; mask = ga.A[:, :, 1] .!= 0; end
     ind = findall(mask)
     # ind_vec = LinearIndices(mat)[ind]
@@ -26,8 +51,27 @@ function rast2mat(ga::GeoArray, mask::Union{Nothing, AbstractArray{Bool, 2}} = n
         res[:, i] = mat[ind]
     end
     # keep enough information for the reverse operation
-    res, mask
+    res, rast(ga, vals = mask) # mat, mask
+end
+
+function rast_3dTo2d(file::AbstractString)
+    ga = rast(file)
+    ga2 = shrink_bbox(ga)
+    rast_3dTo2d(ga2)
+end
+
+# mask is 3d boolean array
+function rast_3dTo2d(file::AbstractString, mask_shrink::AbstractArray{Bool}, mask::AbstractArray{Bool})
+    ga = rast(file)
+    ga2 = shrink_bbox(ga, mask_shrink)
+    rast_3dTo2d(ga2, mask)
 end
 
 
-export rast2df, shrink_bbox, rast2mat
+function maskCoords(mask::GeoArray{Bool})
+    LON, LAT = st_coords(mask)
+    ind = findall(mask.A)
+    DataFrame(id = seq_along(ind), lon = LON[ind], lat = LAT[ind])
+end
+
+export rast2df, shrink_bbox, rast_3dTo2d, maskCoords
