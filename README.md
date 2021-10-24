@@ -1,9 +1,8 @@
-<!-- [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://evetion.github.io/GeoArrays.jl/)  -->
-<!-- [![Build Status](https://travis-ci.org/evetion/GeoArrays.jl.svg?branch=master)](https://travis-ci.org/evetion/GeoArrays.jl)  -->
-[![Build status](https://ci.appveyor.com/api/projects/status/jijdv2f9m3nm792u?svg=true)](https://ci.appveyor.com/project/kongdd/geoarrays-jl) 
-[![codecov](https://codecov.io/gh/evetion/GeoArrays.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/evetion/GeoArrays.jl)
+<!-- [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://geo-julia.github.io/stars.jl/)  -->
+<!-- [![Build Status](https://travis-ci.org/geo-julia/stars.jl.svg?branch=master)](https://travis-ci.org/geo-julia/stars.jl)  -->
+[![codecov](https://codecov.io/gh/geo-julia/stars.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/geo-julia/stars.jl)
 
-# GeoArrays
+# stars
 
 Simple geographical raster interaction built on top of [ArchGDAL](https://github.com/yeesian/ArchGDAL.jl/), [GDAL](https://github.com/JuliaGeo/GDAL.jl) and [CoordinateTransformations](https://github.com/FugroRoames/CoordinateTransformations.jl).
 
@@ -14,7 +13,7 @@ This packages takes its inspiration from Python's [rasterio](https://github.com/
 ## Installation
 
 ```julia
-(v1.5) pkg> add GeoArrays
+(v1.5) pkg> add stars
 ```
 
 ## Examples
@@ -22,11 +21,11 @@ This packages takes its inspiration from Python's [rasterio](https://github.com/
 #### Basic Usage
 
 ```julia
-julia> using GeoArrays
+julia> using stars
 
 # Read TIF file
 julia> fn = download("https://github.com/yeesian/ArchGDALDatasets/blob/master/data/utmsmall.tif?raw=true")
-julia> geoarray = GeoArrays.read(fn)
+julia> geoarray = st_read(fn)
 100x100x1 Array{UInt8,3} with AffineMap([60.0 0.0; 0.0 -60.0], [440720.0, 3.75132e6]) and CRS PROJCS["NAD27 / UTM zone 11N"...
 
 # Affinemap containing offset and scaling
@@ -39,9 +38,9 @@ GeoFormatTypes.WellKnownText{GeoFormatTypes.CRS,String}(GeoFormatTypes.CRS(), "P
 
 # Create, reference and write a TIFF
 julia> ga = GeoArray(rand(100,200))
-julia> bbox!(ga, (min_x=2., min_y=51., max_x=5., max_y=54.))  # roughly the Netherlands
-julia> epsg!(ga, 4326)  # in WGS84
-julia> GeoArrays.write!("test.tif", ga)
+julia> st_bbox!(ga, bbox(xmin=2., ymin=51., xmax=5., ymax=54.))  # roughly the Netherlands
+julia> st_crs!(ga, 4326)  # in WGS84
+julia> st_write!("test.tif", ga)
 ```
 
 #### Using coordinates
@@ -74,31 +73,11 @@ julia> trans = Translation(100, 0)
 julia> compose!(ga, trans)
 
 
-# Math with GeoArrays (- + * /)
+# Math with stars (- + * /)
 julia> GeoArray(rand(5,5,1)) - GeoArray(rand(5,5,1))
 5x5x1 Array{Float64,3} with AffineMap([1.0 0.0; 0.0 1.0], [0.0, 0.0]) and undefined CRS
 ```
 
-#### Interpolation
-
-```julia
-julia> using InverseDistanceWeighting  # or any solver from the GeoStats ecosystem
-julia> ga = GeoArray(Array{Union{Missing, Float64}}(rand(5, 1)))
-julia> ga.A[2,1] = missing
-[:, :, 1] =
- 0.6760718768442127
-  missing
- 0.852882193026649
- 0.7137410453351622
- 0.5949409082233854
-julia> GeoArrays.interpolate!(ga, InvDistWeight(:z => (neighbors=3,)))
-[:, :, 1] =
- 0.6760718768442127
- 0.7543298370153771
- 0.852882193026649
- 0.7137410453351622
- 0.5949409082233854
-```
 
 #### Plotting
 
@@ -106,7 +85,7 @@ julia> GeoArrays.interpolate!(ga, InvDistWeight(:z => (neighbors=3,)))
 # Plot a GeoArray
 julia> using Plots
 julia> fn = download("https://github.com/yeesian/ArchGDALDatasets/blob/master/pyrasterio/RGB.byte.tif?raw=true")
-julia> ga = GeoArrays.read(fn)
+julia> ga = st_read(fn)
 julia> plot(ga)
 
 # or plot a band other than the first one

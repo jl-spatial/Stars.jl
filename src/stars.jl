@@ -1,4 +1,4 @@
-module terra
+module stars
 
 using GDAL
 using ArchGDAL; const AG = ArchGDAL
@@ -34,7 +34,7 @@ include("st_plot.jl")
 include("st_subset.jl")
 include("st_read.jl")
 include("st_write.jl")
-include("st_convert.jl")
+include("st_as_sf.jl")
 
 
 # include("hydro/hydro.jl")

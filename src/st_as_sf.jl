@@ -35,12 +35,12 @@ end
 
 
 """
-    rast_3dTo2d(ga::GeoArray, mask::Union{Nothing, AbstractArray{Bool, 2}} = nothing)
-    rast_3dTo2d(file::AbstractString, mask = nothing)
+    st_as_sf(ga::GeoArray, mask::Union{Nothing, AbstractArray{Bool, 2}} = nothing)
+    st_as_sf(file::AbstractString, mask = nothing)
 
 If the input is a file path, `shrink_bbox` will be applied.
 """
-function rast_3dTo2d(ga::GeoArray, mask::Union{Nothing, AbstractArray{Bool, 2}} = nothing)
+function st_as_sf(ga::GeoArray, mask::Union{Nothing, AbstractArray{Bool, 2}} = nothing)
     if mask === nothing; mask = ga.A[:, :, 1] .!= 0; end
     ind = findall(mask)
     # ind_vec = LinearIndices(mat)[ind]
@@ -54,17 +54,17 @@ function rast_3dTo2d(ga::GeoArray, mask::Union{Nothing, AbstractArray{Bool, 2}} 
     res, rast(ga, vals = mask) # mat, mask
 end
 
-function rast_3dTo2d(file::AbstractString)
+function st_as_sf(file::AbstractString)
     ga = rast(file)
     ga2 = shrink_bbox(ga)
-    rast_3dTo2d(ga2)
+    st_as_sf(ga2)
 end
 
 # mask is 3d boolean array
-function rast_3dTo2d(file::AbstractString, mask_shrink::AbstractArray{Bool}, mask::AbstractArray{Bool})
+function st_as_sf(file::AbstractString, mask_shrink::AbstractArray{Bool}, mask::AbstractArray{Bool})
     ga = rast(file)
     ga2 = shrink_bbox(ga, mask_shrink)
-    rast_3dTo2d(ga2, mask)
+    st_as_sf(ga2, mask)
 end
 
 
@@ -74,4 +74,5 @@ function maskCoords(mask::GeoArray{Bool})
     DataFrame(id = seq_along(ind), lon = LON[ind], lat = LAT[ind])
 end
 
-export rast2df, shrink_bbox, rast_3dTo2d, maskCoords
+
+export rast2df, shrink_bbox, st_as_sf, maskCoords
