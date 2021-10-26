@@ -1,0 +1,25 @@
+## Julia Files
+*.jl.cov
+*.jl.*.cov
+*.jl.mem
+docs/build
+Manifest.toml
+
+## Directory
+# test/*
+test/data
+test/deprecated
+test/hydro
+
+# test/*.jl
+*/untest/
+temp/
+Figures/
+
+*.tif
+*.pdf
+
+## data
+*.rda
+*.nc
+*.jld2
