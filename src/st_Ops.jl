@@ -2,6 +2,22 @@
 #   `https://github.com/evetion/GeoArrays.jl/blob/master/src/geoarray.jl`
 # Copyright (c) 2018 Maarten Pronk, MIT license
 
+# Base.IndexStyle(::Type{T}) where {T<:GeoArray} = IndexLinear()
+# Base.iterate(ga::GeoArray) = iterate(ga.A)
+# Base.length(ga::GeoArray) = length(ga.A)
+# Base.parent(ga::GeoArray) = ga.A
+# Base.map(f, ga::GeoArray) = GeoArray(map(f, ga.A), ga.f, ga.crs)
+# Base.convert(::Type{Array{T, 3}}, A::GeoArray{T}) where {T} = convert(Array{T,3}, ga.A)
+Base.size(ga::GeoArray) = size(ga.A)
+Base.eltype(::Type{GeoArray{T}}) where {T} = T
+
+Base.show(io::IO, ::MIME"text/plain", ga::GeoArray) = show(io, ga)
+function Base.show(io::IO, ga::GeoArray)
+    crs = GeoFormatTypes.val(ga.crs)
+    wkt = length(crs) == 0 ? "undefined CRS" : "CRS $crs"
+    print(io, "$(join(size(ga), "x")) $(typeof(ga.A)) with $(ga.f) and $(wkt)")
+end
+
 ## OPERATIONS ------------------------------------------------------------------
 """Check whether two `GeoArrays`s `a` and `b` are
 geographically equal, although not necessarily in content."""

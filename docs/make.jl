@@ -1,5 +1,5 @@
 push!(LOAD_PATH,"../src/")
-using Documenter, Stars.jl
+using Documenter, Stars
 
 makedocs(sitename="Stars.jl")
 

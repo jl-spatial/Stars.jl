@@ -29,15 +29,22 @@ end
     ga3 = GeoArray(rand(10, 9, 8), x, y)
     ga3 = GeoArray(rand(10, 9, 8), x, y, "")
     
-    println(ga2)
+    # println(ga2)
     # for i in 1:length(x), j in 1:length(y)
-    #     @test terra.centercoords(ga2, [i,j]) ≈ [x[i],y[j]]
+    #     @test Stars.centercoords(ga2, [i,j]) ≈ [x[i],y[j]]
     # end
     # for i in 1:length(x), j in 1:length(y)
-    #     @test terra.centercoords(ga3, [i,j]) ≈ [x[i],y[j]]
+    #     @test Stars.centercoords(ga3, [i,j]) ≈ [x[i],y[j]]
     # end
     x, y = range(4, stop = 8.0, length = 11), range(0, stop = 1, length = 9)
     @test_throws ErrorException GeoArray(rand(10, 9), x, y)
+
+    ## test for missing value
+    x = [1 2; missing 4]
+    ga = GeoArray(x)
+    @test typeof(ga) == GeoArray{Union{Missing, Int64}}
+    @test size(ga) == (2, 2, 1)
+    @test ga.crs == Stars.crs2wkt("")
 end
 
 
