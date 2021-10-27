@@ -18,6 +18,8 @@ end
         include("test-st_crs.jl")
         
         include("test-gdalinfo.jl")
+        include("test-gdal_polygonize.jl")
+        
         include("test-readGDAL.jl")
         include("test-st_coords.jl")
         # include("test_interpolate.jl")

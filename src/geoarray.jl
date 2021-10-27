@@ -4,9 +4,6 @@
 
 include("DataTypes.jl")
 
-
-WGS84_wkt = "GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AXIS[\"Latitude\",NORTH],AXIS[\"Longitude\",EAST],AUTHORITY[\"EPSG\",\"4326\"]]"
-
 """
     GeoArray(A::AbstractArray{T,3} where T <: Union{Real,Union{Missing,Real}})
 
@@ -41,10 +38,10 @@ GeoArray(A::AbstractArray{T, 2}, args...) where T<:Union{Real, Union{Missing, Re
 
 
 Base.size(ga::GeoArray) = size(ga.A)
-Base.IndexStyle(::Type{T}) where {T<:GeoArray} = IndexLinear()
-Base.iterate(ga::GeoArray) = iterate(ga.A)
-Base.length(ga::GeoArray) = length(ga.A)
-Base.parent(ga::GeoArray) = ga.A
+# Base.IndexStyle(::Type{T}) where {T<:GeoArray} = IndexLinear()
+# Base.iterate(ga::GeoArray) = iterate(ga.A)
+# Base.length(ga::GeoArray) = length(ga.A)
+# Base.parent(ga::GeoArray) = ga.A
 # Base.map(f, ga::GeoArray) = GeoArray(map(f, ga.A), ga.f, ga.crs)
 # Base.convert(::Type{Array{T, 3}}, A::GeoArray{T}) where {T} = convert(Array{T,3}, ga.A)
 Base.eltype(::Type{GeoArray{T}}) where {T} = T

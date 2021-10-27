@@ -10,7 +10,7 @@ function write!(fn::AbstractString, ga::GeoArray, nodata = nothing, shortname = 
     use_nodata = false
 
     # Set compression options for GeoTIFFs
-    shortname == "GTiff" && (options = ["COMPRESS=DEFLATE","TILED=YES", "NUM_THREADS=4"]) # NUM_THREADS=4
+    shortname == "GTiff" && (options = ["COMPRESS=DEFLATE","TILED=YES", "NUM_THREADS=4"]) # NUM_THREADS=4, BIGTIFF=YES
 
     # Slice data and replace missing by nodata
     if isa(dtype, Union) && dtype.a == Missing

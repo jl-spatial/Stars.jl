@@ -1,8 +1,8 @@
 # Stars
 
 <!-- badges: start -->
-[![CI](https://github.com/geo-julia/Stars.jl/workflows/CI/badge.svg)](https://github.com/geo-julia/Stars.jl/actions)
-[![codecov](https://codecov.io/gh/geo-julia/Stars.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/geo-julia/Stars.jl)
+[![CI](https://github.com/jl-spatial/Stars.jl/workflows/CI/badge.svg)](https://github.com/jl-spatial/Stars.jl/actions)
+[![codecov](https://codecov.io/gh/jl-spatial/Stars.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/jl-spatial/Stars.jl)
 <!-- [![CRAN](http://www.r-pkg.org/badges/version/rtrend)](https://cran.r-project.org/package=rtrend) -->
 <!-- [![total](http://cranlogs.r-pkg.org/badges/grand-total/rtrend)](https://www.rpackages.io/package/rtrend) -->
 <!-- [![monthly](http://cranlogs.r-pkg.org/badges/rtrend)](https://www.rpackages.io/package/rtrend) -->
@@ -21,5 +21,5 @@ Julia Version R Stars(https://github.com/r-spatial/stars) For Spatial Raster Dat
 ## Installation
 
 ```julia
-(v1.6) pkg> add https://github.com/geo-julia/Stars.jl
+(v1.6) pkg> add https://github.com/jl-spatial/Stars.jl
 ```

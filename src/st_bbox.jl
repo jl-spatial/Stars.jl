@@ -1,8 +1,8 @@
 """
 Boundary bbox
 
-- st_bbox(xmin, ymin, xmax, ymax)
-- st_bbox(lon, lat)    
+    st_bbox(lon, lat)
+    
 - st_bbox(ga::GeoArray)    
 - st_bbox!(ga::GeoArray, b::bbox) : reset bbox
 - st_bbox(ncfile::String)  

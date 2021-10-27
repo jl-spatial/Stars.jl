@@ -4,5 +4,5 @@ using Documenter, Stars.jl
 makedocs(sitename="Stars.jl")
 
 deploydocs(
-    repo = "github.com/geo-julia/Stars.jl.git",
+    repo = "github.com/jl-spatial/Stars.jl.git",
 )

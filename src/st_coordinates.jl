@@ -21,13 +21,6 @@ end
     st_coordinates(ga)
   
 `st_coordinates` is similar as `st_dim`, but for irregular GeoArray.
-
-# Return
-Matrix{StaticArrays.SVector{2, Float64}}, e.g.:
-```julia
-[110.004, 42.9958]  [110.004, 42.9875]  
-[110.013, 42.9958]  [110.013, 42.9875]
-```
 """
 function st_coordinates(ga::GeoArray, p::SVector{2, Int})
     ga.f(p .- 0.5)

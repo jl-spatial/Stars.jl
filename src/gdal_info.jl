@@ -1,13 +1,14 @@
 """
+    gdalinfo(ga::GeoArray)
+    gdalinfo(file::AbstractString) 
+    
 get detailed GDAL information
 
 ## return
-- `file`     : 
 - `range`    : [lon_min, lon_max, lat_min, lat_max]
 - `cellsize` : [dx, dy]
-- `lon`      : longitudes with the length of nlon
-- `lat`      : latitudes with the length of nlat
-- `dim`      : [width, height, ntime]
+- `coords`   : [lon, lat]
+- `dim`      : (width, height, ntime)
 """
 function gdalinfo(ga::GeoArray)
     # mid = [1, 1];
@@ -27,7 +28,7 @@ function gdalinfo(ga::GeoArray)
     Dict(
         "bbox"     => b, 
         "cellsize" => [dx, dy], 
-        "coords"    => [lon, lat],
+        "coords"   => [lon, lat],
         "dim"      => size(ga.A))
 end
 
