@@ -34,6 +34,8 @@ Base.:-(a::GeoArray, b::Real) = GeoArray(a.A - b, a.f, a.crs)
 Base.:*(a::GeoArray, b::Real) = GeoArray(a.A * b, a.f, a.crs)
 Base.:/(a::GeoArray, b::Real) = GeoArray(a.A / b, a.f, a.crs)
 
+export -,+,*,/
+
 
 ## Math OPERATIONS -------------------------------------------------------------
 function Base.:sum(ga::GeoArray, dims = 3)

@@ -22,6 +22,8 @@ end
         
         include("test-readGDAL.jl")
         include("test-st_coords.jl")
+
+        include("test-sp.jl")
         # include("test_interpolate.jl")
         # include("test_crs.jl")
         # include("test_operations.jl")

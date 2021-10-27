@@ -42,13 +42,12 @@ include("st_read.jl")
 include("st_write.jl")
 include("st_as_sf.jl")
 include("st_as_stars.jl")
-
+include("sp/sp.jl")
 
 # include("hydro/hydro.jl")
 # include("hydro/snap_pour_points.jl")
 
-export GeoArray, indices
+export GeoArray
 export compose!, epsg!, crs!
-export -,+,*,/
 
 end
