@@ -1,5 +1,15 @@
 # file = "clusterIds_temporal-(perc_50%,1980-2015).tif"
 # x = GeoArrays.read(file);
+"""
+    gdal_polygonize(raster_file, band = 1, out_file = "out.shp"; 
+        fieldname = "grid", nodata = NaN)
+
+Creates vector polygons for all connected regions of pixels in the raster
+sharing a common pixel value.
+
+# References
+https://gdal.org/programs/gdal_polygonize.html
+"""
 function gdal_polygonize(raster_file, band = 1, out_file = "out.shp"; 
     fieldname = "grid", nodata = NaN)
 

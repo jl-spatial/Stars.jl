@@ -2,6 +2,12 @@
 #   `https://github.com/evetion/GeoArrays.jl/blob/master/src/io.jl`
 # Copyright (c) 2018 Maarten Pronk, MIT license
 
+"""
+    st_read(fn::AbstractString, bands = nothing)
+
+# Return
+A GeoArray object
+"""
 function st_read(fn::AbstractString, bands = nothing)
     isfile(fn) || error("File not found.")
     dataset = ArchGDAL.unsafe_read(fn)
@@ -57,8 +63,8 @@ end
 
 
 """
-    st_read(file::String, options...)
-    st_read(files::Array{String,1}, options)
+    readGDAL(file::String, options...)
+    readGDAL(files::Array{String,1}, options)
 
 # Arguments:
 - `options`: other parameters to `ArchGDAL.read(dataset, options...)`.

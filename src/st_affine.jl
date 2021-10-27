@@ -50,22 +50,22 @@ function unitrange_to_affine(x::StepRangeLen, y::StepRangeLen)
     )
 end
 
+## Extend CoordinateTransformations
+# CoordinateTransformations.compose(ga::GeoArray, t2::AffineMap) = CoordinateTransformations.compose(ga.f, t2)
+# CoordinateTransformations.compose(ga::GeoArray, t2::LinearMap) = CoordinateTransformations.compose(ga.f, t2)
+# CoordinateTransformations.compose(ga::GeoArray, t2::Translation) = CoordinateTransformations.compose(ga.f, t2)
 
-# Extend CoordinateTransformations
-CoordinateTransformations.compose(ga::GeoArray, t2::AffineMap) = CoordinateTransformations.compose(ga.f, t2)
-CoordinateTransformations.compose(ga::GeoArray, t2::LinearMap) = CoordinateTransformations.compose(ga.f, t2)
-CoordinateTransformations.compose(ga::GeoArray, t2::Translation) = CoordinateTransformations.compose(ga.f, t2)
-
-"""Transform an GeoArray by applying a Transformation."""
-function compose!(ga::GeoArray, t2::AffineMap)
-    ga.f = compose(ga, t2)
-end
-function compose!(ga::GeoArray, t2::LinearMap)
-    ga.f = compose(ga, t2)
-end
-function compose!(ga::GeoArray, t2::Translation)
-    ga.f = compose(ga, t2)
-end
+# """Transform an GeoArray by applying a Transformation."""
+# function compose!(ga::GeoArray, t2::AffineMap)
+#     ga.f = compose(ga, t2)
+# end
+# function compose!(ga::GeoArray, t2::LinearMap)
+#     ga.f = compose(ga, t2)
+# end
+# function compose!(ga::GeoArray, t2::Translation)
+#     ga.f = compose(ga, t2)
+# end
 
 
 export st_affine
+
