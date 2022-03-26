@@ -14,6 +14,16 @@ mutable struct SpatialPoints{C<:AbstractArray{<:Real, 2}, B<:bbox, P} <: Abstrac
     # spatial::Spatial
 end
 
+"""
+    SpatialPixelsDataFrame{
+        T<:AbstractArray{<:Real, 2}, 
+        C<:AbstractArray{<:Real, 2}, B<:bbox, P}  <: AbstractSpatialPoints
+    
+    SpatialPixelsDataFrame(data::AbstractArray{<:Real, 2}, coords::AbstractArray{<:Real, 2}, b::bbox, proj = 4326)
+
+# Usage
+`SpatialPixelsDataFrame(data, coords, bbox, proj)`
+"""
 mutable struct SpatialPixelsDataFrame{
     T<:AbstractArray{<:Real, 2}, 
     C<:AbstractArray{<:Real, 2}, B<:bbox, P}  <: AbstractSpatialPoints
@@ -23,6 +33,9 @@ mutable struct SpatialPixelsDataFrame{
     bbox::B
     proj::P
 end
+
+SpatialPixelsDataFrame(data::AbstractArray{<:Real, 2}, coords::AbstractArray{<:Real, 2}, b::bbox, proj = 4326) = 
+    SpatialPixelsDataFrame(data, coords, b, proj)
 
 st_bbox(sp::AbstractSpatial) = sp.bbox
 st_proj(sp::AbstractSpatial) = sp.proj

@@ -10,12 +10,13 @@
 
 Julia Version R Stars(https://github.com/r-spatial/stars) For Spatial Raster Data Analysis
 
-## On the top of:
+## Mainly dependent on:
 
+- [GeoArrays](https://github.com/evetion/GeoArrays.jl)
+  
 - [ArchGDAL](https://github.com/yeesian/ArchGDAL.jl/)
 - [GDAL](https://github.com/JuliaGeo/GDAL.jl)
 - [CoordinateTransformations](https://github.com/FugroRoames/CoordinateTransformations.jl)
-- [GeoArrays](https://github.com/evetion/GeoArrays.jl)
 
 
 ## Installation

@@ -28,4 +28,3 @@
     @test st_coords(sp) == coords
     @test st_coords(sp_df) == coords
 end
-
