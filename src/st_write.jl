@@ -3,6 +3,7 @@
 # Copyright (c) 2018 Maarten Pronk, MIT license
 
 function write!(fn::AbstractString, ga::GeoArray, nodata = nothing, shortname = find_shortname(fn))
+
     options = String[]
     w, h, b = size(ga)
     dtype = eltype(ga)

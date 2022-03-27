@@ -59,11 +59,6 @@ function Base.:sum(ga::GeoArray, dims = 3)
     GeoArray(arr, ga.f, ga.crs)
 end
 
-function Statistics.:mean(ga::GeoArray, dims = 3)
-    arr = mean(ga.A; dims = dims)
-    GeoArray(arr, ga.f, ga.crs)
-end
-
 function Base.:maximum(ga::GeoArray, dims = 3)
     arr = maximum(ga.A, dims = dims)
     GeoArray(arr, ga.f, ga.crs)
@@ -74,5 +69,9 @@ function Base.:minimum(ga::GeoArray, dims = 3)
     GeoArray(arr, ga.f, ga.crs)
 end
 
+function Statistics.:mean(ga::GeoArray, dims = 3)
+    arr = mean(ga.A; dims = dims)
+    GeoArray(arr, ga.f, ga.crs)
+end
 
 export sum, mean, maximum, minimum

@@ -14,10 +14,8 @@ import Statistics: mean
 
 
 include("geoarray.jl")
-include("rast.jl")
 
 include("st_bbox.jl")
-include("st_affine.jl")
 include("st_crs.jl")
 
 include("st_dim.jl")

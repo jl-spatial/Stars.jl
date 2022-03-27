@@ -34,7 +34,8 @@ mutable struct SpatialPixelsDataFrame{
     proj::P
 end
 
-SpatialPixelsDataFrame(data::AbstractArray{<:Real, 2}, coords::AbstractArray{<:Real, 2}, b::bbox, proj = 4326) = 
+SpatialPixelsDataFrame(data::AbstractArray{<:Real, 2}, 
+    coords::AbstractArray{<:Real, 2}, b::bbox, proj = 4326) = 
     SpatialPixelsDataFrame(data, coords, b, proj)
 
 st_bbox(sp::AbstractSpatial) = sp.bbox
