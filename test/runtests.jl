@@ -8,14 +8,13 @@ function nan_equal(x, y)
 end
 
 
-@testset "GeoArrays" begin
+@testset "Stars" begin
     cd(dirname(@__FILE__)) do
         # include("get_testdata.jl")
         # include("test_geoutils.jl")
         include("test-geoarray.jl")
         include("test-st_as_sf.jl")
         include("test-st_Ops.jl")
-        include("test-st_crs.jl")
         
         include("test-gdalinfo.jl")
         include("test-gdal_polygonize.jl")

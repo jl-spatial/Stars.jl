@@ -19,8 +19,10 @@ function Base.show(io::IO, ga::GeoArray)
 end
 
 ## OPERATIONS ------------------------------------------------------------------
-"""Check whether two `GeoArrays`s `a` and `b` are
-geographically equal, although not necessarily in content."""
+"""
+Check whether two `GeoArrays`s `a` and `b` are geographically equal, 
+although not necessarily in content.
+"""
 function equals(a::GeoArray, b::GeoArray)
     size(a) == size(b) && a.f == b.f && a.crs == b.crs
 end

@@ -52,7 +52,7 @@ function gdalinfo(file::AbstractString)
         # "file"     => basename(file),
         "bbox"     => b, 
         "cellsize" => [dx, dy], 
-        "coords"    => [lon, lat],
+        "coords"   => [lon, lat],
         "dim"      => (Int64.([w, h, nband])..., ) # convert to tuple
     )
 end

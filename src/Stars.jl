@@ -4,6 +4,8 @@ using GDAL
 using ArchGDAL; const AG = ArchGDAL
 
 using CoordinateTransformations
+export AffineMap;
+
 using StaticArrays
 using GeoFormatTypes
 const GFT = GeoFormatTypes
@@ -12,7 +14,7 @@ const GFT = GeoFormatTypes
 import Statistics
 import Statistics: mean
 
-
+include("geo_basic.jl")
 include("geoarray.jl")
 
 include("st_bbox.jl")
@@ -44,8 +46,5 @@ include("sp/sp.jl")
 
 # include("hydro/hydro.jl")
 # include("hydro/snap_pour_points.jl")
-
-export GeoArray
-export compose!, epsg!, crs!
 
 end

@@ -1,5 +1,4 @@
-using CoordinateTransformations
-
+using Stars
 
 @testset "st_bbox" begin
     ga = st_read("data/utmsmall.tif") 
@@ -42,9 +41,14 @@ end
     ## test for missing value
     x = [1 2; missing 4]
     ga = GeoArray(x)
-    @test typeof(ga) == GeoArray{Union{Missing, Int64}}
+    @test typeof(ga) == GeoArray{Union{Missing, Int64}, 3}
     @test size(ga) == (2, 2, 1)
     @test ga.crs == Stars.crs2wkt("")
+
+    # 4-d array
+    r = GeoArray(rand(10, 9, 8, 2))
+    @test ndims(r) == 4
+    @test ndims(r[:, :, 1, 2]) == 3 # at least 3d array
 end
 
 

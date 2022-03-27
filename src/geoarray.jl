@@ -1,12 +1,9 @@
-# This script is modified from: 
-#   `https://github.com/evetion/GeoArrays.jl/blob/master/src/geoarray.jl`
-# Copyright (c) 2018 Maarten Pronk, MIT license
+# @references:
+# 1. `https://github.com/evetion/GeoArrays.jl/blob/master/src/geoarray.jl`
 
-include("DataTypes.jl")
+# using Stars
+# methods(GeoArray)
 
-
-# abstract type AbstractSpatial end
-# abstract type AbstractSpatialPoints <: AbstractSpatial end 
 abstract type AbstractGeoArray{T,N} <: AbstractArray{T,N} end
 # abstract type AbstractGeoArray{T,N,D,A} <: AbstractDimensionalArray{T,N,D,A} end
 
@@ -18,38 +15,54 @@ const RealOrMissing = Union{Missing,Real}
 
 Construct a GeoArray from any Array. A default `AffineMap` and `CRS` will be generated.
 
+# Arguments
+
+- `A`: An AbstractArray, at least 2d Array
+
+
 # Examples
-```julia-repl
-julia> GeoArray(rand(10,10,1))
-10x10x1 Array{Float64, 3} with AffineMap([1.0 0.0; 0.0 1.0], [0.0, 0.0]) and undefined CRS
+```julia
+ga = GeoArray(rand(10,10,1))
+GeoArray(rand(10,10))
+
+GeoArray(ga, vals = ga.A)                        # copy `f` and `crs` from `ga`
+GeoArray(rand(10,10), 1:10, 2:11)        # define coordinate by `x` and `y`
+GeoArray(rand(7, 4), bbox([70, 15, 140, 55]...)) # define coordinate by `bbox`
+
+# 4-d array
+ga = GeoArray(rand(10, 10, 2, 3))
+GeoArray(ga, vals = ga.A)
 ```
 """
-mutable struct GeoArray{T<:RealOrMissing,N} <: AbstractGeoArray{T,N}
+Base.@kwdef mutable struct GeoArray{T<:RealOrMissing,N} <: AbstractGeoArray{T,N}
     A::AbstractArray{T,N}
-    f::AffineMap
-    crs::WellKnownText{GeoFormatTypes.CRS, <:String}
+    f::AffineMap = default_affinemap
+    crs::WellKnownText = crs2wkt("")
 end
 
-# no crs in this version
-GeoArray(A::AbstractArray{<:RealOrMissing}) = 
-    GeoArray(A, geotransform_to_affine(SVector(0.,1.,0.,0.,0.,1.)), "")
-
-GeoArray(A::AbstractArray{<:RealOrMissing}, f::AffineMap, crs::String = WGS84_wkt) = 
+GeoArray(A::AbstractArray{<:RealOrMissing}, f::AffineMap, crs::AbstractString) = 
     GeoArray(A, f, crs2wkt(crs))
 
-function GeoArray(A::AbstractArray{<:RealOrMissing, 3}, 
+# # `A`: 
+GeoArray(A::AbstractArray{<:RealOrMissing}, f::AffineMap = default_affinemap) = 
+    GeoArray(A, f, crs2wkt(""))
+
+GeoArray(A::AbstractArray{<:RealOrMissing, 2}, f::AffineMap, crs::WellKnownText = crs2wkt("")) = 
+    GeoArray(reshape(A, size(A)..., 1), f, crs)
+
+# # also suit for high-dimension
+function GeoArray(A::AbstractArray{<:RealOrMissing}, 
     x::AbstractRange, y::AbstractRange, args...)
 
-    size(A)[1:2] != (length(x), length(y)) && 
-        error("Size of `GeoArray` $(size(A)) does not match size of (x,y): $((length(x),length(y))). Note that this function takes *center coordinates*.")
+    if size(A)[1:2] != (length(x), length(y))
+        # Note that this function takes *center coordinates*.
+        error("Size of `GeoArray` $(size(A)) does not match size of (x,y): $((length(x), length(y))).")
+    end
     f = unitrange_to_affine(x, y)
     GeoArray(A, f, args...)
 end
 
-GeoArray(A::AbstractArray{<:RealOrMissing, 2}, args...) = 
-    GeoArray(reshape(A, size(A)..., 1), args...)
-
-function GeoArray(A::AbstractArray{<:RealOrMissing, 3}, b::bbox; proj = 4326)
+function GeoArray(A::AbstractArray{<:RealOrMissing}, b::bbox; proj = 4326)
     ga = GeoArray(A)
     st_bbox!(ga, b)
     st_crs!(ga, proj)
@@ -57,16 +70,16 @@ function GeoArray(A::AbstractArray{<:RealOrMissing, 3}, b::bbox; proj = 4326)
 end
 
 GeoArray(fn::AbstractString, bands = nothing) = st_read(fn, bands)
-GeoArray(ga::GeoArray; vals::AbstractArray{<:RealOrMissing}) = GeoArray(vals, ga.f, ga.crs)
 
+GeoArray(ga::AbstractGeoArray; vals::AbstractArray{<:RealOrMissing}) = begin
+    GeoArray(vals, ga.f, ga.crs)
+end
 
-"""
-- rast(fn::AbstractString, bands = nothing): construct `GeoArray` object from file
-- rast(ga::GeoArray; vals::AbstractArray{T}): Reconstruct `GeoArray` object
-"""
+# """
+# - rast(fn::AbstractString, bands = nothing): construct `GeoArray` object from file
+# """
 rast = GeoArray
-
-export rast
+export GeoArray, rast
 
 include("st_[.jl")
 include("st_Ops.jl")

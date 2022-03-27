@@ -24,19 +24,20 @@ end
 # Usage
 `SpatialPixelsDataFrame(data, coords, bbox, proj)`
 """
-mutable struct SpatialPixelsDataFrame{
+Base.@kwdef mutable struct SpatialPixelsDataFrame{
     T<:AbstractArray{<:Real, 2}, 
-    C<:AbstractArray{<:Real, 2}, B<:bbox, P}  <: AbstractSpatialPoints
+    C<:AbstractArray{<:Real, 2},
+    B<:bbox, P}  <: AbstractSpatialPoints
 
     data::T
     coords::C
     bbox::B
-    proj::P
+    proj::P = 4326
 end
 
-SpatialPixelsDataFrame(data::AbstractArray{<:Real, 2}, 
-    coords::AbstractArray{<:Real, 2}, b::bbox, proj = 4326) = 
-    SpatialPixelsDataFrame(data, coords, b, proj)
+# SpatialPixelsDataFrame(data::AbstractArray{<:Real, 2}, 
+#     coords::AbstractArray{<:Real, 2}, b::bbox, proj = 4326) = 
+#     SpatialPixelsDataFrame(data, coords, b, proj)
 
 st_bbox(sp::AbstractSpatial) = sp.bbox
 st_proj(sp::AbstractSpatial) = sp.proj

@@ -2,6 +2,7 @@
 ##   `https://github.com/evetion/GeoArrays.jl/blob/master/src/crs.jl`
 ## Copyright (c) 2018 Maarten Pronk, MIT license
 
+const TYPE_index = Union{Colon,AbstractRange,Integer}
 """
     getindex(ga::GeoArray, i::AbstractRange, j::AbstractRange, k::Union{Colon,AbstractRange,Integer})
 Index a GeoArray with `AbstractRange`s to get a cropped GeoArray with the correct `AffineMap` set.
@@ -12,7 +13,7 @@ julia> ga[2:3,2:3,1]
 ```
 """
 function Base.getindex(ga::GeoArray, i::AbstractRange, j::AbstractRange, 
-    k::Union{Colon,AbstractRange,Integer} = :)
+    k::TYPE_index = :)
     
     A = @view ga.A[i, j, k]
     x, y = first(i) - 1, first(j) - 1
@@ -21,9 +22,8 @@ function Base.getindex(ga::GeoArray, i::AbstractRange, j::AbstractRange,
     GeoArray(A, AffineMap(ga.f.linear, t), ga.crs)
 end
 
-function Base.getindex(ga::GeoArray, ::Colon, ::Colon, k::Union{Colon,AbstractRange,Integer} = :)
-    println("d")
-    rast(ga, vals = @view(ga.A[:, :, k]))
+function Base.getindex(ga::GeoArray, ::Colon, ::Colon, args...)
+    rast(ga, vals = @view(ga.A[:, :, args...]))
 end
 
 # Base.getindex(ga::GeoArray, I::Vararg{<:Integer,2}) = begin

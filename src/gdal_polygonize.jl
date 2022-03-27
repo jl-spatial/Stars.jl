@@ -1,5 +1,4 @@
 # file = "clusterIds_temporal-(perc_50%,1980-2015).tif"
-# x = GeoArrays.read(file);
 """
     gdal_polygonize(raster_file, band = 1, out_file = "out.shp"; 
         fieldname = "grid", nodata = NaN)
