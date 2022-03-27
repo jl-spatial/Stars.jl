@@ -1,10 +1,3 @@
-
-function meshgrid(x::AbstractArray{T,1}, y::AbstractArray{T,1}) where T <: Real 
-    X = x .* ones(1, length(y))
-    Y = ones(length(x)) .* y'
-    X, Y
-end
-
 """
     st_dim(ga::AbstractGeoArray; mid::Vector{Int} = [1, 1])
     st_dim(b::bbox, cellsize::T) where {T <: Real}

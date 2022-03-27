@@ -4,16 +4,20 @@
 
 const TYPE_index = Union{Colon,AbstractRange,Integer}
 """
-    getindex(ga::AbstractGeoArray, i::AbstractRange, j::AbstractRange, k::Union{Colon,AbstractRange,Integer})
-Index a AbstractGeoArray with `AbstractRange`s to get a cropped AbstractGeoArray with the correct `AffineMap` set.
+    getindex(ga::AbstractGeoArray, i::AbstractRange, j::AbstractRange, k::TYPE_index = :)
+    TYPE_index = Union{Colon,AbstractRange,Integer}
+
+Index a `AbstractGeoArray` with `AbstractRange`s to get a cropped
+AbstractGeoArray with the correct `AffineMap` set.
+
 # Examples
+
 ```julia-repl
 julia> ga[2:3,2:3,1]
 2x2x1 Array{Float64, 3} with AffineMap([1.0 0.0; 0.0 1.0], [1.0, 1.0]) and undefined CRS
 ```
 """
-function Base.getindex(ga::AbstractGeoArray, i::AbstractRange, j::AbstractRange, 
-    k::TYPE_index = :)
+function Base.getindex(ga::AbstractGeoArray, i::AbstractRange, j::AbstractRange, k::TYPE_index = :)
     
     A = @view ga.A[i, j, k]
     x, y = first(i) - 1, first(j) - 1
@@ -34,5 +38,5 @@ end
 #     getindex(ga.A, I...)
 # end
 Base.setindex!(ga::AbstractGeoArray, v, I::Vararg{<:AbstractFloat,2}) = setindex!(ga, v, SVector{2}(I))
-Base.setindex!(ga::AbstractGeoArray, v, I::Vararg{Union{<:Integer,<:AbstractRange{<:Integer}},2}) = setindex!(ga.A, v, I..., :)
-Base.setindex!(ga::AbstractGeoArray, v, I::Vararg{Union{<:Integer,<:AbstractRange{<:Integer}},3} ) = setindex!(ga.A, v, I...)
+Base.setindex!(ga::AbstractGeoArray, v, I::Vararg{TYPE_index,2}) = setindex!(ga.A, v, I..., :)
+Base.setindex!(ga::AbstractGeoArray, v, I::Vararg{TYPE_index,3}) = setindex!(ga.A, v, I...)

@@ -30,7 +30,7 @@ function affine_to_geotransform(am::AffineMap)
     [t[1], l[1], l[3], t[2], l[2], l[4]]
 end
 
-function unitrange_to_affine(x::T, y::T) where {T <: Union{StepRangeLen, UnitRange}}
+function unitrange_to_affine(x::AbstractRange, y::AbstractRange)
     δx, δy = step(x), step(y)
     AffineMap(
         SMatrix{2,2}(δx, 0, 0, δy),
@@ -42,6 +42,9 @@ end
 """
     bbox(xmin, ymin, xmax, ymax)
     bbox(;xmin, ymin, xmax, ymax)
+    bbox2tuple(b::bbox)
+    bbox2vec(b::bbox)
+    bbox2affine(size::Tuple{Integer, Integer}, b::bbox)
 
 Spatial bounding box
 """
@@ -52,9 +55,15 @@ Base.@kwdef struct bbox
     ymax::Float64
 end
 
-# This script is modified from: 
-#   `https://github.com/evetion/GeoArrays.jl/blob/master/src/geoarray.jl`
-# Copyright (c) 2018 Maarten Pronk, MIT license
+bbox2tuple(b::bbox) = (xmin = b.xmin, ymin = b.ymin, xmax = b.xmax, ymax = b.ymax)
+bbox2vec(b::bbox) = [b.xmin, b.ymin, b.xmax, b.ymax]
+    
+function bbox2affine(size::Tuple{Integer, Integer}, b::bbox)
+    AffineMap(
+        SMatrix{2,2}((b.xmax - b.xmin) / size[1], 0, 0, -(b.ymax - b.ymin)/size[2]),
+        SVector(b.xmin, b.ymax))
+end
+
 const default_affinemap = geotransform_to_affine(SVector(0., 1., 0., 0., 0., 1.))
 const TYPE_CRS = Union{WellKnownText, AbstractString}
 

@@ -15,10 +15,6 @@ function st_bbox(lon, lat)
         maximum(lon) + cellsize_x/2, maximum(lat) + cellsize_y/2)
 end
 
-bbox2tuple(b::bbox) = (xmin = b.xmin, ymin = b.ymin, xmax = b.xmax, ymax = b.ymax)
-bbox2vec(b::bbox) = [b.xmin, b.ymin, b.xmax, b.ymax]
-    
-
 function st_bbox(ga::AbstractGeoArray; to_vec = false)
     ax, ay = ga.f(SVector(0,0))
     bx, by = ga.f(SVector(size(ga)[1:2]))
@@ -34,17 +30,10 @@ function st_bbox(ncfile::String)
     st_bbox(lon, lat)    
 end
 
-function bbox_to_affine(size::Tuple{Integer, Integer}, b::bbox)
-    AffineMap(
-        SMatrix{2,2}((b.xmax - b.xmin) / size[1], 0, 0, -(b.ymax - b.ymin)/size[2]),
-        SVector(b.xmin, b.ymax)
-        )
-end
-
 """Set geotransform of `AbstractGeoArray` by specifying a bounding box.
 Note that this only can result in a non-rotated or skewed `AbstractGeoArray`."""
 function st_bbox!(ga::AbstractGeoArray, b::bbox)
-    ga.f = bbox_to_affine(size(ga)[1:2], b)
+    ga.f = bbox2affine(size(ga)[1:2], b)
     ga
 end
 

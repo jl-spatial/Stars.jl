@@ -6,20 +6,15 @@ function rast2df(r::AbstractGeoArray)
     DataFrame(id = seq_along(LON), value = r.A[:], lon = LON[:], lat = LAT[:])
 end
 
-function rast2df(r::Array{AbstractGeoArray})
-    df = [];
-    for i in 1:length(r)
-        d = rast2df(r[i])
-        push!(df, d)
-    end
-    df
+function rast2df(list::Vector{AbstractGeoArray})
+    # need to add a melt_list
+    map(rast2df, list)
 end
-
 
 """
     shrink_bbox(ga, mask::AbstractArray{Bool, 2} = nothing)
     
-only true values in `mask` will be kept.
+Only true values in `mask` will be kept.
 """
 function shrink_bbox(ga::AbstractGeoArray, mask::Union{Nothing, AbstractArray{Bool, 2}} = nothing)
     if mask === nothing; mask = ga.A[:, :, 1] .!= 0; end

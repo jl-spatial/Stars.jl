@@ -3,11 +3,11 @@
 # 1. `https://github.com/evetion/GeoArrays.jl/blob/master/src/geoarray.jl`
 
 # Base.IndexStyle(::Type{T}) where {T<:AbstractGeoArray} = IndexLinear()
-# Base.iterate(ga::AbstractGeoArray) = iterate(ga.A)
-# Base.length(ga::AbstractGeoArray) = length(ga.A)
-# Base.parent(ga::AbstractGeoArray) = ga.A
-# Base.map(f, ga::AbstractGeoArray) = AbstractGeoArray(map(f, ga.A), ga.f, ga.crs)
 # Base.convert(::Type{Array{T, 3}}, A::AbstractGeoArray{T}) where {T} = convert(Array{T,3}, ga.A)
+Base.iterate(ga::AbstractGeoArray) = iterate(ga.A)
+Base.length(ga::AbstractGeoArray) = length(ga.A)
+Base.parent(ga::AbstractGeoArray) = ga.A
+Base.map(f, ga::AbstractGeoArray) = GeoArray(map(f, ga.A), ga.f, ga.crs) # ?
 Base.size(ga::AbstractGeoArray) = size(ga.A)
 Base.eltype(::Type{AbstractGeoArray{T}}) where {T} = T
 

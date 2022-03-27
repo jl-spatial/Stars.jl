@@ -1,6 +1,6 @@
-# This script is modified from: 
-#   `https://github.com/evetion/GeoArrays.jl/blob/master/src/io.jl`
 # Copyright (c) 2018 Maarten Pronk, MIT license
+# @references:
+# 1. `https://github.com/evetion/GeoArrays.jl/blob/master/src/io.jl`
 
 const shortnames = Dict(
     (".tif", ".tiff") => "GTiff",

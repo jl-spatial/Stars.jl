@@ -19,7 +19,7 @@ function st_as_stars(data::AbstractArray{T, 2}, mask::AbstractArray{Bool, 2}) wh
     arr
 end
 
-function st_as_stars(data::AbstractArray{T, 2}, r_mask::GeoArray; outfile = nothing) where T <: Real
+function st_as_stars(data::AbstractArray{T, 2}, r_mask::AbstractGeoArray; outfile = nothing) where T <: Real
 
     arr = st_as_stars(data, r_mask.A[:, :, 1])
     r = GeoArray(r_mask, vals = arr)
