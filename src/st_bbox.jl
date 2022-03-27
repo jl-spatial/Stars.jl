@@ -3,8 +3,8 @@ Boundary bbox
 
     st_bbox(lon, lat)
     
-- st_bbox(ga::GeoArray)    
-- st_bbox!(ga::GeoArray, b::bbox) : reset bbox
+- st_bbox(ga::AbstractGeoArray)    
+- st_bbox!(ga::AbstractGeoArray, b::bbox) : reset bbox
 - st_bbox(ncfile::String)  
 """
 
@@ -19,7 +19,7 @@ bbox2tuple(b::bbox) = (xmin = b.xmin, ymin = b.ymin, xmax = b.xmax, ymax = b.yma
 bbox2vec(b::bbox) = [b.xmin, b.ymin, b.xmax, b.ymax]
     
 
-function st_bbox(ga::GeoArray; to_vec = false)
+function st_bbox(ga::AbstractGeoArray; to_vec = false)
     ax, ay = ga.f(SVector(0,0))
     bx, by = ga.f(SVector(size(ga)[1:2]))
     # (min_x=min(ax, bx), min_y=min(ay, by), max_x=max(ax, bx), max_y=max(ay, by))
@@ -41,9 +41,9 @@ function bbox_to_affine(size::Tuple{Integer, Integer}, b::bbox)
         )
 end
 
-"""Set geotransform of `GeoArray` by specifying a bounding box.
-Note that this only can result in a non-rotated or skewed `GeoArray`."""
-function st_bbox!(ga::GeoArray, b::bbox)
+"""Set geotransform of `AbstractGeoArray` by specifying a bounding box.
+Note that this only can result in a non-rotated or skewed `AbstractGeoArray`."""
+function st_bbox!(ga::AbstractGeoArray, b::bbox)
     ga.f = bbox_to_affine(size(ga)[1:2], b)
     ga
 end

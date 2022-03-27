@@ -1,12 +1,12 @@
 import DataFrames: DataFrame
 
 
-function rast2df(r::GeoArray)
+function rast2df(r::AbstractGeoArray)
     LON, LAT = st_coords(r)    
     DataFrame(id = seq_along(LON), value = r.A[:], lon = LON[:], lat = LAT[:])
 end
 
-function rast2df(r::Array{GeoArray})
+function rast2df(r::Array{AbstractGeoArray})
     df = [];
     for i in 1:length(r)
         d = rast2df(r[i])
@@ -21,7 +21,7 @@ end
     
 only true values in `mask` will be kept.
 """
-function shrink_bbox(ga::GeoArray, mask::Union{Nothing, AbstractArray{Bool, 2}} = nothing)
+function shrink_bbox(ga::AbstractGeoArray, mask::Union{Nothing, AbstractArray{Bool, 2}} = nothing)
     if mask === nothing; mask = ga.A[:, :, 1] .!= 0; end
     ind = findall(mask)
     # ind_vec = LinearIndices(mat)[ind]
@@ -35,12 +35,12 @@ end
 
 
 """
-    st_as_sf(ga::GeoArray, mask::Union{Nothing, AbstractArray{Bool, 2}} = nothing)
+    st_as_sf(ga::AbstractGeoArray, mask::Union{Nothing, AbstractArray{Bool, 2}} = nothing)
     st_as_sf(file::AbstractString, mask = nothing)
 
 If the input is a file path, `shrink_bbox` will be applied.
 """
-function st_as_sf(ga::GeoArray, mask::Union{Nothing, AbstractArray{Bool, 2}} = nothing; missval = 0)
+function st_as_sf(ga::AbstractGeoArray, mask::Union{Nothing, AbstractArray{Bool, 2}} = nothing; missval = 0)
     if mask === nothing; mask = ga.A[:, :, 1] .!= missval; end
     ind = findall(mask)
     # ind_vec = LinearIndices(mat)[ind]
@@ -74,7 +74,7 @@ end
 """
 d_coord = st_as_sf(mask)
 """
-function maskCoords(r_mask::GeoArray{Bool})
+function maskCoords(r_mask::AbstractGeoArray{Bool})
     LON, LAT = st_coords(r_mask)
     ind = findall(r_mask.A)
     DataFrame(id = seq_along(ind), lon = LON[ind], lat = LAT[ind])

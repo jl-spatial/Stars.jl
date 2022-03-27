@@ -4,7 +4,7 @@
 
 using RecipesBase
 
-@recipe function f(ga::GeoArray; band=1)
+@recipe function f(ga::AbstractGeoArray; band=1)
     xflip --> false
     yflip --> false
     aspect_ratio --> 1

@@ -6,13 +6,13 @@ function meshgrid(x::AbstractArray{T,1}, y::AbstractArray{T,1}) where T <: Real
 end
 
 """
-    st_dim(ga::GeoArray; mid::Vector{Int} = [1, 1])
+    st_dim(ga::AbstractGeoArray; mid::Vector{Int} = [1, 1])
     st_dim(b::bbox, cellsize::T) where {T <: Real}
-    st_dim(ga::GeoArray, dim::Symbol; mid::Vector{Int} = [1, 1])
+    st_dim(ga::AbstractGeoArray, dim::Symbol; mid::Vector{Int} = [1, 1])
     
 Get dimensions of x and y
 """
-function st_dim(ga::GeoArray; mid::Vector{Int} = [1, 1])
+function st_dim(ga::AbstractGeoArray; mid::Vector{Int} = [1, 1])
     if length(mid) == 1; mid = [mid, mid]; end
     
     cellsize_x = ga.f.linear[1]
@@ -35,10 +35,10 @@ function st_dim(b::bbox, cellsize::T) where {T <: Real}
     lon, lat # return
 end
 
-st_dim_x(ga::GeoArray; mid::Vector{Int} = [1, 1]) = st_dim(ga; mid)[1]
-st_dim_y(ga::GeoArray; mid::Vector{Int} = [1, 1]) = st_dim(ga; mid)[2]
+st_dim_x(ga::AbstractGeoArray; mid::Vector{Int} = [1, 1]) = st_dim(ga; mid)[1]
+st_dim_y(ga::AbstractGeoArray; mid::Vector{Int} = [1, 1]) = st_dim(ga; mid)[2]
 
-function st_dim(ga::GeoArray, dim::Symbol; mid::Vector{Int} = [1, 1])
+function st_dim(ga::AbstractGeoArray, dim::Symbol; mid::Vector{Int} = [1, 1])
     if dim==:x
         ci = st_dim_x(ga; mid = mid)
     elseif dim==:y

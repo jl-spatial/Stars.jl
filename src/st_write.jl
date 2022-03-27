@@ -2,7 +2,7 @@
 #   `https://github.com/evetion/GeoArrays.jl/blob/master/src/io.jl`
 # Copyright (c) 2018 Maarten Pronk, MIT license
 
-function write!(fn::AbstractString, ga::GeoArray, nodata = nothing, shortname = find_shortname(fn))
+function write!(fn::AbstractString, ga::AbstractGeoArray, nodata = nothing, shortname = find_shortname(fn))
 
     options = String[]
     w, h, b = size(ga)
@@ -51,7 +51,7 @@ function write!(fn::AbstractString, ga::GeoArray, nodata = nothing, shortname = 
 end
 
 """
-    st_write(ga::GeoArray, fn::AbstractString; nodata = nothing)
+    st_write(ga::AbstractGeoArray, fn::AbstractString; nodata = nothing)
     st_write(A::AbstractArray{T}, b::bbox, fn::AbstractString;nodata = nothing)
 
 
@@ -60,7 +60,7 @@ end
 - `fn`: outfile path
 - `nodata`: should be in the same data type as ga.A (or A)
 """
-st_write(ga::GeoArray, fn::AbstractString; nodata = nothing) = write!(fn, ga, nodata)
+st_write(ga::AbstractGeoArray, fn::AbstractString; nodata = nothing) = write!(fn, ga, nodata)
 
 function st_write(A::AbstractArray{T}, b::bbox, fn::AbstractString; nodata = nothing) where T <: Real
     ga = GeoArray(A, b)

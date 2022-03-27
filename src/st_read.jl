@@ -6,7 +6,7 @@
     st_read(fn::AbstractString, bands = nothing)
 
 # Return
-A GeoArray object
+A AbstractGeoArray object
 """
 function st_read(fn::AbstractString, bands = nothing)
     isfile(fn) || error("File not found.")
