@@ -31,6 +31,7 @@ include("utils/utils.jl")
 include("raster/ncread.jl")
 include("raster/clip.jl")
 
+include("gdal_basic.jl")
 include("gdal_info.jl")
 include("gdal_polygonize.jl")
 
