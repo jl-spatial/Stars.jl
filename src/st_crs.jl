@@ -13,7 +13,6 @@ function is_rotated(ga::AbstractGeoArray)
     ga.f.linear[2] != 0. || ga.f.linear[3] != 0.
 end
 
-## -----------------------------------------------------------------------------
 """
     st_crs!(ga::AbstractGeoArray, crs::WellKnownText{GeoFormatTypes.CRS,<:AbstractString})
     st_crs!(ga::AbstractGeoArray, crs::GFT.CoordinateReferenceSystemFormat)
@@ -21,7 +20,7 @@ end
 
 Set CRS on AbstractGeoArray by epsgcode or string
 """
-function st_crs!(ga::AbstractGeoArray, crs::WellKnownText{GeoFormatTypes.CRS,<:AbstractString})
+function st_crs!(ga::AbstractGeoArray, crs::WellKnownText)
     ga.crs = crs
     ga
 end
