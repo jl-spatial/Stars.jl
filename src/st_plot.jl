@@ -4,13 +4,16 @@
 
 using RecipesBase
 
-@recipe function f(ga::AbstractGeoArray; band=1)
+@recipe function f(ga::AbstractGeoArray; band=1, fact=1)
     xflip --> false
     yflip --> false
     aspect_ratio --> 1
     seriestype := :heatmap
     seriescolor := :viridis
 
+    if fact > 1
+        ga = resample(ga, fact)
+    end
     # coords = st_coordinates(ga)
     # @show coords
     x = st_coordinates(ga, :x)

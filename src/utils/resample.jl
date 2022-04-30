@@ -17,7 +17,7 @@ function resample(x::AbstractArray{T,2}, fact::Integer=10, fun::Function=first) 
     out
 end
 
-function resample(x::Array{T,3}, fact::Integer=10, fun::Function=first) where {T <: Real}
+function resample(x::AbstractArray{T,3}, fact::Integer=10, fun::Function=first) where {T <: Real}
     nrow, ncol, ntime = size(x)
     nrow2 = fld(nrow, fact)
     ncol2 = fld(ncol, fact)
