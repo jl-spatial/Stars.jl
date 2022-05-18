@@ -1,4 +1,5 @@
 module Stars
+# using Stars
 
 using GDAL
 using ArchGDAL; const AG = ArchGDAL

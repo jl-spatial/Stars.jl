@@ -55,6 +55,12 @@ Base.@kwdef struct bbox
     ymax::Float64
 end
 
+function bbox2dims(b::bbox, cellsize)
+    lon = b.xmin+cellsize/2:cellsize:b.xmax
+    lat = b.ymin+cellsize/2:cellsize:b.ymax
+    lon, lat
+end
+
 bbox2range(b::bbox) = [b.xmin, b.xmax, b.ymin, b.ymax]
 
 bbox2tuple(b::bbox) = (xmin=b.xmin, ymin=b.ymin, xmax=b.xmax, ymax=b.ymax)
@@ -79,4 +85,4 @@ WGS84_wkt = crs2wkt(WGS84_str)
 
 export affine_to_geotransform, geotransform_to_affine,
     crs2wkt, bbox,
-    bbox2range, bbox2vec;
+    bbox2range, bbox2vec, bbox2dims;

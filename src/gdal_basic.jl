@@ -17,7 +17,7 @@ gdal_close(ds::Ptr{Nothing}) = GDAL.gdalclose(ds)
 
 # gdal_open(file::AbstractString) = ArchGDAL.read(file)
 function gdal_open(f::AbstractString, mode = GDAL.GA_ReadOnly, args...)
-  GDAL.gdalopen(f, GDAL.GA_ReadOnly, args...)
+  GDAL.gdalopen(f, mode, args...)
 end
 
 function gdal_open(func::Function, args...; kwargs...)
@@ -54,7 +54,17 @@ function bandnames(f)
   end
 end
 
-
+# works
+function set_bandnames(f, bandnames)
+  n = nband(f)
+  gdal_open(f, GDAL.GA_Update) do ds
+    map(iband -> begin
+        band = GDAL.gdalgetrasterband(ds, iband)
+        GDAL.gdalsetdescription(band, bandnames[iband])
+      end, 1:n)
+  end
+  nothing
+end
 
 function gdalinfo(file::AbstractString) 
     ds = ArchGDAL.read(file)
@@ -115,5 +125,5 @@ function gdalinfo(ga::GeoArray)
         "dim"      => size(ga.A))
 end
 
-export gdal_open, gdal_close, nband, bandnames
+export gdal_open, gdal_close, nband, bandnames, set_bandnames
 export gdalinfo

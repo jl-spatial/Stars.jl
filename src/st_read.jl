@@ -68,6 +68,8 @@ end
 
 # Arguments:
 - `options`: other parameters to `ArchGDAL.read(dataset, options...)`.
+
+# Return
 """
 function readGDAL(file::AbstractString, options...)
     ArchGDAL.read(file) do dataset
