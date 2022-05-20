@@ -2,13 +2,12 @@
 # 1. `https://github.com/evetion/GeoArrays.jl/blob/master/src/geoarray.jl`
 
 # using Stars
-# methods(GeoArray)
 
 abstract type AbstractGeoArray{T,N} <: AbstractArray{T,N} end
 # abstract type AbstractGeoArray{T,N,D,A} <: AbstractDimensionalArray{T,N,D,A} end
 
 const RealOrMissing = Union{Missing,Real}
-
+const TypeCRS = Union{WellKnownText,AbstractString}
 """
     GeoArray(A::AbstractArray{<:RealOrMissing}, f::AffineMap = default_affinemap, crs::WellKnownText = crs2wkt(""))
     GeoArray(A::AbstractArray{<:RealOrMissing}, f::AffineMap, crs::AbstractString)
@@ -39,22 +38,30 @@ GeoArray(ga, vals = ga.A)
 """
 Base.@kwdef mutable struct GeoArray{T<:RealOrMissing,N} <: AbstractGeoArray{T,N}
     A::AbstractArray{T,N}
-    f::AffineMap = default_affinemap
-    crs::WellKnownText = crs2wkt("")
-    names = nothing
+    f::AffineMap
+    crs::TypeCRS
+    names
+    time
 end
 
+# using Stars
+function GeoArray(A::AbstractArray{<:RealOrMissing,N},
+    f::AffineMap=default_affinemap,
+    crs::TypeCRS=crs2wkt(""),
+    names=nothing) where {N}
 
-GeoArray(A::AbstractArray{<:RealOrMissing}, f::AffineMap, crs::WellKnownText=crs2wkt("")) =
-    GeoArray(A, f, crs, nothing)
-
-# GeoArray(A, f, crs) = GeoArray(A, f, crs, nothing)
-GeoArray(A::AbstractArray{<:RealOrMissing}, f::AffineMap, crs::AbstractString) =
-    GeoArray(A, f, crs2wkt(crs))
-
-GeoArray(A::AbstractArray{<:RealOrMissing}, f::AffineMap=default_affinemap) =
-    GeoArray(A, f, crs2wkt(""))
-
+    # @show N
+    if N == 1
+        error("`A` should be matrix or array!")
+    elseif N == 2
+        A = reshape(A, (size(A)..., 1))
+    end
+    ntime = size(A) |> last
+    if names !== nothing
+        names = length(names) > ntime ? names[1:ntime] : nothing
+    end
+    GeoArray(; A=A, f=f, crs=crs2wkt(crs), names=names, time=nothing)
+end
 
 # # also suit for high-dimension
 function GeoArray(A::AbstractArray{<:RealOrMissing},
@@ -65,6 +72,7 @@ function GeoArray(A::AbstractArray{<:RealOrMissing},
         error("Size of `GeoArray` $(size(A)) does not match size of (x,y): $((length(x), length(y))).")
     end
     f = unitrange_to_affine(x, y)
+    # b = st_bbox(x, y)
     GeoArray(A, f, args...)
 end
 
@@ -77,9 +85,10 @@ end
 
 GeoArray(fn::AbstractString, bands=nothing) = st_read(fn, bands)
 
-GeoArray(ga::AbstractGeoArray; vals::AbstractArray{<:RealOrMissing}) =
-    GeoArray(vals, ga.f, ga.crs, ga.names)
-
+function GeoArray(ga::AbstractGeoArray; vals::AbstractArray{<:RealOrMissing}, names = nothing)
+    if names === nothing; names = ga.names; end
+    GeoArray(vals, ga.f, ga.crs, names)
+end
 
 rast = GeoArray
 export GeoArray, rast

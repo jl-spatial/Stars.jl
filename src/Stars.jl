@@ -46,6 +46,7 @@ include("st_as_sf.jl")
 include("st_as_stars.jl")
 include("sp/sp.jl")
 
+include("st_mask.jl")
 # include("hydro/hydro.jl")
 # include("hydro/snap_pour_points.jl")
 

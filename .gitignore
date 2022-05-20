@@ -24,3 +24,6 @@ Figures/
 *.rda
 *.nc
 *.jld2
+
+scripts/
+*.csv

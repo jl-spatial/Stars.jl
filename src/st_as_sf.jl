@@ -29,15 +29,26 @@ function shrink_bbox(ga::AbstractGeoArray, mask::Union{Nothing, AbstractArray{Bo
 end
 
 
+function get_mask(ga::AbstractGeoArray, missval=NaN)
+    not_nan = .!(isnan.(ga.A[:, :, 1]))
+    vals = @views isnan(missval) ? not_nan : (ga.A[:, :, 1] .!= missval) .& not_nan
+    rast(ga, vals=vals)
+end
+
+export get_mask;
+
 """
     st_as_sf(ga::AbstractGeoArray, mask::Union{Nothing, AbstractArray{Bool, 2}} = nothing)
     st_as_sf(file::AbstractString, mask = nothing)
 
 If the input is a file path, `shrink_bbox` will be applied.
 """
-function st_as_sf(ga::AbstractGeoArray, mask::Union{Nothing, AbstractArray{Bool, 2}} = nothing; missval = 0)
-    if mask === nothing; mask = ga.A[:, :, 1] .!= missval; end
-    ind = findall(mask)
+function st_as_sf(ga::AbstractGeoArray, 
+    mask::Union{Nothing,AbstractGeoArray}=nothing; missval=NaN)
+    
+    if mask === nothing; mask = get_mask(ga, missval); end
+
+    ind = findall(mask.A)
     # ind_vec = LinearIndices(mat)[ind]
     ntime = size(ga, 3)
     res = zeros(eltype(ga.A), length(ind), ntime)
@@ -45,10 +56,10 @@ function st_as_sf(ga::AbstractGeoArray, mask::Union{Nothing, AbstractArray{Bool,
         mat = ga.A[:, :, i]
         res[:, i] = mat[ind]
     end
-    # keep enough information for the reverse operation
-    res, mask, st_bbox(ga)
-    # rast(ga, vals = mask) # mat, mask
+    res # mask, st_bbox(ga)
 end
+# keep enough information for the reverse operation
+# rast(ga, vals = mask) # mat, mask
 
 function st_as_sf(file::AbstractString; missval = 0)
     ga = rast(file)
@@ -72,7 +83,8 @@ d_coord = st_as_sf(mask)
 function maskCoords(r_mask::AbstractGeoArray{Bool})
     LON, LAT = st_coords(r_mask)
     ind = findall(r_mask.A)
-    DataFrame(id = seq_along(ind), lon = LON[ind], lat = LAT[ind])
+    ind = LinearIndices(r_mask.A)[ind]
+    DataFrame(id=ind, lon=LON[ind], lat=LAT[ind])
 end
 
 # the inverse operation

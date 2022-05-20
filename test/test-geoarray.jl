@@ -1,4 +1,5 @@
 using Stars
+using Test
 
 @testset "st_bbox" begin
     ga = st_read("data/utmsmall.tif") 

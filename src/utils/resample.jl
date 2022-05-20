@@ -32,6 +32,6 @@ end
 
 function resample(x::GeoArray, fact::Integer=10, fun::Function=first)
     # reconstruct the a.f
-    GeoArray(resample(x.A, fact, fun), a.f, a.crs)
+    GeoArray(resample(x.A, fact, fun), x.f, x.crs)
 end
 

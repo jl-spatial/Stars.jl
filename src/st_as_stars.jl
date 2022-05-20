@@ -22,6 +22,8 @@ end
 function st_as_stars(data::AbstractArray{T, 2}, r_mask::AbstractGeoArray; outfile = nothing) where T <: Real
 
     arr = st_as_stars(data, r_mask.A[:, :, 1])
+    @show size(arr)
+    
     r = GeoArray(r_mask, vals = arr)
     if outfile !== nothing; st_write(r, outfile); end
     r
