@@ -1,4 +1,5 @@
-# using
+const TypeMASK = Union{Nothing,AbstractArray{Bool,2}}
+
 
 function st_mask!(ga::AbstractGeoArray, mask::AbstractGeoArray)
   # arr = zeros(T, size(mask)..., ntime)
@@ -10,6 +11,5 @@ function st_mask!(ga::AbstractGeoArray, mask::AbstractGeoArray)
     x[ind] .= NaN
   end
 end
-
 
 export st_mask!

@@ -5,23 +5,37 @@
 # Base.convert(::Type{Array{T, 3}}, A::AbstractGeoArray{T}) where {T} = convert(Array{T,3}, ga.A)
 # using Stars
 
+for (m, f) in ((:Base, :isnan),)
+    @eval begin
+        $m.$f(ga::AbstractGeoArray) = begin
+            GeoArray(ga, vals=$m.$f.(ga.A))
+        end
+    end
+end
+
 Base.iterate(ga::AbstractGeoArray) = iterate(ga.A)
 Base.length(ga::AbstractGeoArray) = length(ga.A)
 Base.parent(ga::AbstractGeoArray) = ga.A
-Base.map(f, ga::AbstractGeoArray) = GeoArray(ga, vals = map(f, ga.A))
+Base.map(f, ga::AbstractGeoArray) = GeoArray(ga, vals=map(f, ga.A))
 Base.size(ga::AbstractGeoArray) = size(ga.A)
 Base.eltype(::Type{AbstractGeoArray{T}}) where {T} = T
 
 Base.show(io::IO, ::MIME"text/plain", ga::AbstractGeoArray) = show(io, ga)
 function Base.show(io::IO, ga::AbstractGeoArray)
+    info = gdalinfo(ga)
+
     crs = GeoFormatTypes.val(ga.crs)
     wkt = length(crs) == 0 ? "undefined CRS" : "CRS $crs"
-    print(io, "size  : $(join(size(ga), "x")) $(typeof(ga.A))")
-    print(io, "\nextent: $(st_bbox(ga)) [xmin, ymin, xmax, ymax]")
-    print(io, "\nnames : $(ga.names)")
-    print(io, "\naffine: $(ga.f)")
-    print(io, "\ncrs   : $(wkt)")
-    print(io, "\ntime  : $(ga.time)")
+    print(io, "size      : $(join(size(ga), "x")) $(typeof(ga.A)) \n")
+    # print(io, "dimensions: $(info["dim"]) (nrow, ncol, nlyr)\n")
+    print(io, "resolution: $(info["cellsize"]) (x, y)\n")
+    print(io, "extent    : $(st_bbox(ga)) [xmin, ymin, xmax, ymax] \n")
+    print(io, "affine    : $(ga.f) \n")
+    print(io, "crs       : $(wkt) \n")
+    print(io, "names     : $(ga.names) \n")
+    print(io, "time      : $(ga.time) \n")
+    print(io, "----------------\n")
+    r_summary(ga.A[:, :, 1])
 end
 
 ## OPERATIONS ------------------------------------------------------------------
@@ -29,18 +43,17 @@ end
 Check whether two `GeoArrays`s `a` and `b` are geographically equal, 
 although not necessarily in content.
 """
-# function equals(a::AbstractGeoArray, b::AbstractGeoArray)
-#     size(a) == size(b) && a.f == b.f && a.crs == b.crs
-# end
-
 Base.:(==)(a::AbstractGeoArray, b::AbstractGeoArray) = size(a) == size(b) && a.f == b.f && a.crs == b.crs
 Base.:(==)(a::AbstractGeoArray, b::Real) = GeoArray(a, vals=a.A .== b)
+Base.:!(a::AbstractGeoArray) = GeoArray(a, vals=.!a.A)
 
+Base_ops = ((:Base, :+), (:Base, :-), (:Base, :*), (:Base, :/))
 
-Base_funcs = ((:Base, :+), (:Base, :-), (:Base, :*), (:Base, :/),
-    (:Base, :>), (:Base, :<), (:Base, :>=), (:Base, :<=),
-    (:Base, :!=))
-for (m, f) in Base_funcs
+Base_lgl = ((:Base, :>), (:Base, :<), (:Base, :>=), (:Base, :<=),
+    (:Base, :!=),
+    (:Base, :&), (:Base, :|))
+
+for (m, f) in Base_ops
     # _f = Symbol(m, ".:", f)
     @eval begin
         $m.$f(a::AbstractGeoArray, b::AbstractGeoArray) = begin
@@ -51,6 +64,27 @@ for (m, f) in Base_funcs
 
         $m.$f(a::AbstractGeoArray, b::Real) = GeoArray(a, vals=$m.$f.(a.A, b))
         $m.$f(a::Real, b::AbstractGeoArray) = GeoArray(a, vals=$m.$f.(a, b.A))
+    end
+end
+
+# 对于lgl型运算，增加NaN的处理
+for (m, f) in Base_lgl
+    # _f = Symbol(m, ".:", f)
+    @eval begin
+        $m.$f(a::AbstractGeoArray, b::AbstractGeoArray) = begin
+            a == b || throw(
+                DimensionMismatch("Can't operate on non-geographic-equal `AbstractGeoArray`s"))
+            GeoArray(a, vals=$m.$f.(a.A, b.A))
+        end
+
+        $m.$f(a::AbstractGeoArray, b::Real) = begin
+            lgl = .&($m.$f.(a.A, b), .!isnan.(a.A))
+            GeoArray(a, vals=lgl)
+        end
+        $m.$f(a::Real, b::AbstractGeoArray) = begin
+            lgl = .&($m.$f.(a, b.A), .!isnan.(b.A))
+            GeoArray(a, vals=lgl)
+        end
     end
 end
 

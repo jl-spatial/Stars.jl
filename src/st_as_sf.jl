@@ -1,79 +1,36 @@
 import DataFrames: DataFrame
 
+# using Stars
+include("convert.jl")
 
-function rast2df(r::AbstractGeoArray)
-    LON, LAT = st_coords(r)    
-    DataFrame(id = seq_along(LON), value = r.A[:], lon = LON[:], lat = LAT[:])
-end
-
-function rast2df(list::Vector{AbstractGeoArray})
-    # need to add a melt_list
-    map(rast2df, list)
-end
 
 """
-    shrink_bbox(ga, mask::AbstractArray{Bool, 2} = nothing)
-    
+    st_shrink(ga::AbstractGeoArray, mask::Nothing=nothing; missval=NaN)
+    st_shrink(ga::AbstractGeoArray, mask::AbstractGeoArray)
+    st_shrink(ga::AbstractGeoArray, mask::AbstractArray{<:Real,2})
+        
 Only true values in `mask` will be kept.
+
+## Arguments
+- `mask`: 
+    + `AbstractGeoArray`: returned by `get_mask`
+    + ``
 """
-function shrink_bbox(ga::AbstractGeoArray, mask::Union{Nothing, AbstractArray{Bool, 2}} = nothing)
-    if mask === nothing; mask = ga.A[:, :, 1] .!= 0; end
+st_shrink(ga::AbstractGeoArray, mask::Nothing=nothing; missval=NaN) =
+    st_shrink(ga, get_mask(ga.A, missval))
+
+st_shrink(ga::AbstractGeoArray, mask::AbstractGeoArray;) =
+    st_shrink(ga, mask.A[:, :, 1])
+
+function st_shrink(ga::AbstractGeoArray, mask::AbstractArray{<:Real,2})
     ind = findall(mask)
     # ind_vec = LinearIndices(mat)[ind]
     rows = map(x -> x[1], ind) # x, long
     cols = map(x -> x[2], ind) # y, lat
 
-    I_x = seq(Range(rows)...)
+    I_x = seq(Range(rows)...) # get the Range of `rows` and `cols`
     I_y = seq(Range(cols)...)
     ga[I_x, I_y]
-end
-
-
-function get_mask(ga::AbstractGeoArray, missval=NaN)
-    not_nan = .!(isnan.(ga.A[:, :, 1]))
-    vals = @views isnan(missval) ? not_nan : (ga.A[:, :, 1] .!= missval) .& not_nan
-    rast(ga, vals=vals)
-end
-
-export get_mask;
-
-"""
-    st_as_sf(ga::AbstractGeoArray, mask::Union{Nothing, AbstractArray{Bool, 2}} = nothing)
-    st_as_sf(file::AbstractString, mask = nothing)
-
-If the input is a file path, `shrink_bbox` will be applied.
-"""
-function st_as_sf(ga::AbstractGeoArray, 
-    mask::Union{Nothing,AbstractGeoArray}=nothing; missval=NaN)
-    
-    if mask === nothing; mask = get_mask(ga, missval); end
-
-    ind = findall(mask.A)
-    # ind_vec = LinearIndices(mat)[ind]
-    ntime = size(ga, 3)
-    res = zeros(eltype(ga.A), length(ind), ntime)
-    @views for i = 1:ntime
-        mat = ga.A[:, :, i]
-        res[:, i] = mat[ind]
-    end
-    res # mask, st_bbox(ga)
-end
-# keep enough information for the reverse operation
-# rast(ga, vals = mask) # mat, mask
-
-function st_as_sf(file::AbstractString; missval = 0)
-    ga = rast(file)
-    ga2 = shrink_bbox(ga)
-    st_as_sf(ga2; missval = missval)
-end
-
-# mask is 3d boolean array
-function st_as_sf(file::AbstractString, mask_shrink::AbstractArray{Bool}, 
-    mask::AbstractArray{Bool}; missval = 0)
-
-    ga = rast(file)
-    ga2 = shrink_bbox(ga, mask_shrink)
-    st_as_sf(ga2, mask; missval = missval)
 end
 
 
@@ -87,7 +44,45 @@ function maskCoords(r_mask::AbstractGeoArray{Bool})
     DataFrame(id=ind, lon=LON[ind], lat=LAT[ind])
 end
 
+
+"""
+    st_as_sf(ga::AbstractGeoArray, mask::Union{Nothing, AbstractArray{Bool, 2}} = nothing)
+    st_as_sf(file::AbstractString, mask = nothing)
+
+If the input is a file path, `st_shrink` will be applied.
+"""
+function st_as_sf(ga::AbstractGeoArray, mask::AbstractArray{Bool,2})
+    ind = findall(mask)
+    # ind_vec = LinearIndices(mat)[ind]
+    ntime = size(ga, 3)
+    res = zeros(eltype(ga.A), length(ind), ntime)
+    @views for i = 1:ntime
+        mat = ga.A[:, :, i]
+        res[:, i] = mat[ind]
+    end
+    res
+end
+st_as_sf(ga::AbstractGeoArray, mask::Nothing=nothing) = st_as_sf(ga, .!isnan.(ga.A[:, :, 1]))
+st_as_sf(ga::AbstractGeoArray, mask::AbstractGeoArray) = st_as_sf(ga, mask.A[:, :, 1])
+
+# st_as_sf(ga::AbstractGeoArray, mask::AbstractArray{<:Bool,2}; kw...)
+
+# keep enough information for the reverse operation
+# rast(ga, vals = mask) # mat, mask
+
+function st_as_sf(file::AbstractString; missval=0)
+    ga = rast(file)
+    ga2 = st_shrink(ga)
+    st_as_sf(ga2; missval=missval)
+end
+
+# mask is 3d boolean array
+function st_as_sf(file::AbstractString, mask_shrink::AbstractGeoArray, mask::AbstractGeoArray)
+    ga = rast(file)
+    ga2 = st_shrink(ga, mask_shrink)
+    st_as_sf(ga2, mask)
+end
+
 # the inverse operation
 
-
-export rast2df, shrink_bbox, st_as_sf, maskCoords
+export rast2df, st_shrink, st_as_sf, maskCoords

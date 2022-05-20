@@ -2,12 +2,16 @@
 # using Test
 
 @testset "st_as_sf" begin
-    file_vi = "data/MOD13A2_Henan_2015_2020_10km.tif"
+    file_vi = "test/data/MOD13A2_Henan_2015_2020_10km.tif"
     ga = rast(file_vi)
-    mask = get_mask(ga, 0)
+    mask = ga[1] != 0
+    # mask = get_mask(ga, 0)
     # mask_shrink = ga.A[:, :, 1] .!= 0
+    
+    @test size(st_as_sf(ga, ga[1] != 0), 1) == 670
+    @test size(st_as_sf(ga, !isnan(ga[1])), 1) == 1073
 
-    EVI = st_as_sf(file_vi)
+    EVI = st_as_sf(file_vi, mask)
 
     ## post processing
     # r_mask = rast(mask, b)

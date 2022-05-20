@@ -4,6 +4,7 @@
 # using Stars
 
 abstract type AbstractGeoArray{T,N} <: AbstractArray{T,N} end
+
 # abstract type AbstractGeoArray{T,N,D,A} <: AbstractDimensionalArray{T,N,D,A} end
 
 const RealOrMissing = Union{Missing,Real}
@@ -85,13 +86,15 @@ end
 
 GeoArray(fn::AbstractString, bands=nothing) = st_read(fn, bands)
 
-function GeoArray(ga::AbstractGeoArray; vals::AbstractArray{<:RealOrMissing}, names = nothing)
-    if names === nothing; names = ga.names; end
+function GeoArray(ga::AbstractGeoArray; vals::AbstractArray{<:RealOrMissing}, names=nothing)
+    if names === nothing
+        names = ga.names
+    end
     GeoArray(vals, ga.f, ga.crs, names)
 end
 
 rast = GeoArray
-export GeoArray, rast
+export GeoArray, rast, AbstractGeoArray
 
 include("st_[.jl")
 include("st_Ops.jl")
