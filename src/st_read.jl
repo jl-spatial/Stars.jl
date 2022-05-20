@@ -56,9 +56,11 @@ function st_read(fn::AbstractString, bands = nothing)
         A[mask] .= missing
     end
 
-    wkt = ArchGDAL.getproj(dataset)
+    wkt = ArchGDAL.getproj(dataset) |> crs2wkt
     ArchGDAL.destroy(dataset)
-    GeoArray(A, am, wkt)
+    names = bandnames(fn)
+    # @show names
+    GeoArray(A, am, wkt, names)
 end
 
 

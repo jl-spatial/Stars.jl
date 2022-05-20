@@ -45,8 +45,8 @@ function write!(fn::AbstractString, ga::AbstractGeoArray, nodata = nothing, shor
         gt = affine_to_geotransform(ga.f)
         ArchGDAL.GDAL.gdalsetgeotransform(dataset.ptr, gt)
         ArchGDAL.GDAL.gdalsetprojection(dataset.ptr, GFT.val(ga.crs))
-
     end
+    if ga.names !== nothing; set_bandnames(f, ga.names); end
     fn
 end
 

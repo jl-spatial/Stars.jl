@@ -15,7 +15,10 @@ Base.show(io::IO, ::MIME"text/plain", ga::AbstractGeoArray) = show(io, ga)
 function Base.show(io::IO, ga::AbstractGeoArray)
     crs = GeoFormatTypes.val(ga.crs)
     wkt = length(crs) == 0 ? "undefined CRS" : "CRS $crs"
-    print(io, "$(join(size(ga), "x")) $(typeof(ga.A)) with $(ga.f) and $(wkt)")
+    print(io, "size  : $(join(size(ga), "x")) $(typeof(ga.A))")
+    print(io, "\nnames : $(ga.names)")
+    print(io, "\naffine: $(ga.f)")
+    print(io, "\ncrs   : $(wkt)")
 end
 
 ## OPERATIONS ------------------------------------------------------------------

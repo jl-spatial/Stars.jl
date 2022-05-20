@@ -30,6 +30,11 @@ function Base.getindex(ga::AbstractGeoArray, ::Colon, ::Colon, args...)
     rast(ga, vals = @view(ga.A[:, :, args...]))
 end
 
+function Base.getindex(ga::AbstractGeoArray, name::AbstractString)
+    k = findall(ga.names .== name)
+    rast(@view(ga.A[:, :, k]), ga.f, ga.crs, ga.names[k])
+end
+
 # Base.getindex(ga::AbstractGeoArray, I::Vararg{<:Integer,2}) = begin
 #     getindex(ga.A, I..., :)
 # end

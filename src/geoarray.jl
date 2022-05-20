@@ -41,19 +41,23 @@ Base.@kwdef mutable struct GeoArray{T<:RealOrMissing,N} <: AbstractGeoArray{T,N}
     A::AbstractArray{T,N}
     f::AffineMap = default_affinemap
     crs::WellKnownText = crs2wkt("")
+    names = nothing
 end
 
-GeoArray(A::AbstractArray{<:RealOrMissing}, f::AffineMap, crs::AbstractString) = 
+
+GeoArray(A::AbstractArray{<:RealOrMissing}, f::AffineMap, crs::WellKnownText=crs2wkt("")) =
+    GeoArray(A, f, crs, nothing)
+
+# GeoArray(A, f, crs) = GeoArray(A, f, crs, nothing)
+GeoArray(A::AbstractArray{<:RealOrMissing}, f::AffineMap, crs::AbstractString) =
     GeoArray(A, f, crs2wkt(crs))
 
-GeoArray(A::AbstractArray{<:RealOrMissing}, f::AffineMap = default_affinemap) = 
+GeoArray(A::AbstractArray{<:RealOrMissing}, f::AffineMap=default_affinemap) =
     GeoArray(A, f, crs2wkt(""))
 
-GeoArray(A::AbstractArray{<:RealOrMissing, 2}, f::AffineMap, crs::WellKnownText = crs2wkt("")) = 
-    GeoArray(reshape(A, size(A)..., 1), f, crs)
 
 # # also suit for high-dimension
-function GeoArray(A::AbstractArray{<:RealOrMissing}, 
+function GeoArray(A::AbstractArray{<:RealOrMissing},
     x::AbstractRange, y::AbstractRange, args...)
 
     if size(A)[1:2] != (length(x), length(y))
@@ -64,19 +68,19 @@ function GeoArray(A::AbstractArray{<:RealOrMissing},
     GeoArray(A, f, args...)
 end
 
-function GeoArray(A::AbstractArray{<:RealOrMissing}, b::bbox; proj = 4326)
+function GeoArray(A::AbstractArray{<:RealOrMissing}, b::bbox; proj=4326)
     ga = GeoArray(A)
     st_bbox!(ga, b)
     st_crs!(ga, proj)
     ga
 end
 
-GeoArray(fn::AbstractString, bands = nothing) = st_read(fn, bands)
+GeoArray(fn::AbstractString, bands=nothing) = st_read(fn, bands)
 
-GeoArray(ga::AbstractGeoArray; vals::AbstractArray{<:RealOrMissing}) = 
-    GeoArray(vals, ga.f, ga.crs)
+GeoArray(ga::AbstractGeoArray; vals::AbstractArray{<:RealOrMissing}) =
+    GeoArray(vals, ga.f, ga.crs, ga.names)
 
-    
+
 rast = GeoArray
 export GeoArray, rast
 
