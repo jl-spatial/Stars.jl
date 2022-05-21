@@ -2,7 +2,7 @@
 # using Test
 
 @testset "st_as_sf" begin
-    file_vi = "test/data/MOD13A2_Henan_2015_2020_10km.tif"
+    file_vi = "data/MOD13A2_Henan_2015_2020_10km.tif"
     ga = rast(file_vi)
     mask = ga[1] != 0
     # mask = get_mask(ga, 0)

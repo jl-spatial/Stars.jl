@@ -5,20 +5,17 @@
 # Base.convert(::Type{Array{T, 3}}, A::AbstractGeoArray{T}) where {T} = convert(Array{T,3}, ga.A)
 # using Stars
 
-for (m, f) in ((:Base, :isnan),)
-    @eval begin
-        $m.$f(ga::AbstractGeoArray) = begin
-            GeoArray(ga, vals=$m.$f.(ga.A))
-        end
-    end
+for f in (:isnan,)
+    m = :Base
+    @eval $m.$f(ga::AbstractGeoArray) = GeoArray(ga, vals=$m.$f.(ga.A))
 end
 
+Base.parent(ga::AbstractGeoArray) = ga.A
 Base.iterate(ga::AbstractGeoArray) = iterate(ga.A)
 Base.length(ga::AbstractGeoArray) = length(ga.A)
-Base.parent(ga::AbstractGeoArray) = ga.A
-Base.map(f, ga::AbstractGeoArray) = GeoArray(ga, vals=map(f, ga.A))
 Base.size(ga::AbstractGeoArray) = size(ga.A)
 Base.eltype(::Type{AbstractGeoArray{T}}) where {T} = T
+Base.map(f, ga::AbstractGeoArray) = GeoArray(ga, vals=map(f, ga.A))
 
 Base.show(io::IO, ::MIME"text/plain", ga::AbstractGeoArray) = show(io, ga)
 function Base.show(io::IO, ga::AbstractGeoArray)

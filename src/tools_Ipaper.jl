@@ -22,6 +22,11 @@ end
 function r_summary(x::AbstractArray; digits=2)
     probs = [0, 0.25, 0.5, 0.75, 1]
     x2 = filter(!isnan, x)
+    if (length(x2) == 0)
+        printstyled("empty array"; color=:red)
+        return
+    end
+    
     n_nan = length(x) - length(x2)
     # u = mean(x2);
     r = quantile(x2, probs)
@@ -29,7 +34,7 @@ function r_summary(x::AbstractArray; digits=2)
     r = round.(r, digits=digits)
     # @show r
     printstyled("Min\t 1st.Qu\t Median\t Mean\t 3rd.Qu\t Max\t NA's\n"; color=:blue)
-    printstyled("$(r[1])\t $(r[2])\t $(r[3])\t $(r[4])\t $(r[5])\t $(r[6])\t $(n_nan)\n"; color=:blue)
+    printstyled("$(r[1])\t $(r[2])\t $(r[3])\t $(r[4])\t $(r[5])\t $(r[6])\t $(n_nan)"; color=:blue)
     nothing
 end
 
